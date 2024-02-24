@@ -10,7 +10,7 @@ import GoogleSignIn
 
 final class AuthenticationViewModel: ObservableObject {
     enum SignInState {
-        case signedIn
+        case signedIn(userId: String)
         case signedOut
     }
 
@@ -44,11 +44,15 @@ final class AuthenticationViewModel: ObservableObject {
 
         let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString, accessToken: accessToken.tokenString)
 
-        Auth.auth().signIn(with: credential) { [unowned self] _, error in
+        Auth.auth().signIn(with: credential) { [unowned self] authDataResult, error in
             if let error = error {
                 debugPrint("ERROR WHILE AUTHENTICATING WITH GOOGLE - \(error.localizedDescription)")
             } else {
-                self.state = .signedIn
+                if let userId = authDataResult?.user.uid {
+                    self.state = .signedIn(userId: userId)
+                } else {
+                    debugPrint("uId (userId) not found in Firebase response, unable to proceed further")
+                }
             }
         }
     }
