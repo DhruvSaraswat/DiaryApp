@@ -26,6 +26,7 @@
 		7BA4F3552B888B280073A13B /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4F3542B888B280073A13B /* GoogleSignInButton.swift */; };
 		7BA4F3572B888CEB0073A13B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4F3562B888CEB0073A13B /* LoginView.swift */; };
 		7BA4F3592B88906C0073A13B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4F3582B88906C0073A13B /* HomeView.swift */; };
+		7BA4F35B2B8D04590073A13B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA4F35A2B8D04590073A13B /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		7BA4F3542B888B280073A13B /* GoogleSignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		7BA4F3562B888CEB0073A13B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		7BA4F3582B88906C0073A13B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		7BA4F35A2B8D04590073A13B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				7BA4F3542B888B280073A13B /* GoogleSignInButton.swift */,
 				7BA4F3562B888CEB0073A13B /* LoginView.swift */,
 				7BA4F3582B88906C0073A13B /* HomeView.swift */,
+				7BA4F35A2B8D04590073A13B /* Constants.swift */,
 			);
 			path = Diary;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				7BA4F3512B87DEA30073A13B /* AuthenticationViewModel.swift in Sources */,
 				7B36D2072B84C365002A5C48 /* ContentView.swift in Sources */,
 				7BA4F3592B88906C0073A13B /* HomeView.swift in Sources */,
+				7BA4F35B2B8D04590073A13B /* Constants.swift in Sources */,
 				7BA4F3572B888CEB0073A13B /* LoginView.swift in Sources */,
 				7B36D2052B84C365002A5C48 /* DiaryApp.swift in Sources */,
 			);

@@ -9,7 +9,7 @@ import SwiftUI
 import GoogleSignIn
 
 struct GoogleSignInButton: UIViewRepresentable {
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) private var colorScheme
 
     private var button = GIDSignInButton()
 
