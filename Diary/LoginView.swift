@@ -79,10 +79,24 @@ struct LoginView: View {
                         }
                         .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
                     })
-                    .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
+                    .padding(EdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0))
 
-                    Spacer()
-                        .frame(height: 10)
+                    HStack(spacing: 0) {
+                        Text("Not a member ?")
+                            .font(.subheadline)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 5))
+                            .foregroundStyle(Constants.Colors.textColor)
+
+                        Button(action: {
+                            viewModel.signInWithGoogle()
+                        }, label: {
+                            Text("Sign Up")
+                                .font(.subheadline)
+                                .fontWeight(.heavy)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+                                .foregroundStyle(Constants.Colors.textColor)
+                        })
+                    }
                 }
                 .background(RoundedRectangle(cornerRadius: 8).fill(Constants.Colors.bgColor))
 
@@ -128,6 +142,10 @@ struct CustomTextField: View {
                 TextField(placeholderText, text: binding)
                     .font(.title3)
                     .minimumScaleFactor(0.1)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled(true)
+                    .textContentType(.oneTimeCode)
+                    .textInputAutocapitalization(.never)
             }
         }
         if showDivider {
