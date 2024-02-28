@@ -12,6 +12,17 @@ struct LoginView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var username: String = ""
     @State private var password: String = ""
+    @State private var showSignUpView: Bool = false
+    private let loginTitle: String = "Welcome to your Diary!"
+    private let signUpTitle: String = "Sign Up"
+    private let emailPlaceholderTextLogin: String = "Email"
+    private let emailPlaceholderTextSignUp: String = "Enter Email"
+    private let passwordPlaceholderTextLogin: String = "Password"
+    private let passwordPlaceholderTextSignUp: String = "Enter Password"
+    private let bottomHelperTextLogin: String = "Not a member ?"
+    private let bottomHelperTextSignUp: String = "Already a member ?"
+    private let signUpText: String = "Sign Up"
+    private let loginText: String = "Login"
 
     var body: some View {
         ZStack {
@@ -25,7 +36,7 @@ struct LoginView: View {
                     .frame(width: 10)
 
                 VStack {
-                    Text("Welcome to your Diary!")
+                    Text(showSignUpView ? signUpTitle : loginTitle)
                         .font(.largeTitle)
                         .padding()
 
@@ -35,13 +46,13 @@ struct LoginView: View {
 
                         VStack(spacing: 0) {
                             CustomTextField(isPassword: false,
-                                            placeholderText: "Email",
+                                            placeholderText: showSignUpView ? emailPlaceholderTextSignUp : emailPlaceholderTextLogin,
                                             binding: $username,
                                             showDivider: true,
                                             image: Image(systemName: "envelope"))
 
                             CustomTextField(isPassword: true,
-                                            placeholderText: "Password",
+                                            placeholderText: showSignUpView ? passwordPlaceholderTextSignUp : passwordPlaceholderTextLogin,
                                             binding: $password,
                                             showDivider: false,
                                             image: Image(systemName: "lock"))
@@ -53,15 +64,29 @@ struct LoginView: View {
                             .frame(width: 10)
                     }
 
-                    Button(action: {
-                        viewModel.signInWithGoogle()
-                    }, label: {
-                        Text("Sign In")
-                            .padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
-                            .foregroundStyle(Constants.Colors.textColor)
-                            .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
-                    })
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    if !showSignUpView {
+                        Button(action: {
+                            viewModel.signInWithGoogle()
+                        }, label: {
+                            Text("Sign In")
+                                .padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
+                                .foregroundStyle(Constants.Colors.textColor)
+                                .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
+                        })
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    } else {
+                        Button(action: {
+                            viewModel.signInWithGoogle()
+                        }, label: {
+                            Text("Create Account")
+                                .padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
+                                .foregroundStyle(Constants.Colors.textColor)
+                                .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
+                        })
+
+                        Text("or")
+                            .font(.subheadline)
+                    }
 
                     Button(action: {
                         viewModel.signInWithGoogle()
@@ -82,15 +107,17 @@ struct LoginView: View {
                     .padding(EdgeInsets(top: 5, leading: 0, bottom: 10, trailing: 0))
 
                     HStack(spacing: 0) {
-                        Text("Not a member ?")
+                        Text(showSignUpView ? bottomHelperTextSignUp : bottomHelperTextLogin)
                             .font(.subheadline)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 5))
                             .foregroundStyle(Constants.Colors.textColor)
 
                         Button(action: {
-                            viewModel.signInWithGoogle()
+                            withAnimation(.smooth) {
+                                showSignUpView.toggle()
+                            }
                         }, label: {
-                            Text("Sign Up")
+                            Text(showSignUpView ? loginText : signUpText)
                                 .font(.subheadline)
                                 .fontWeight(.heavy)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
