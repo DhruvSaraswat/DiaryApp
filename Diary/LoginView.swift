@@ -11,6 +11,7 @@ struct LoginView: View {
     @EnvironmentObject private var viewModel: AuthenticationViewModel
     @Environment(\.colorScheme) private var colorScheme
     @State private var showSignUpView: Bool = false
+
     private let loginTitle: String = "Welcome to your Diary!"
     private let signUpTitle: String = "Sign Up"
     private let emailPlaceholderTextLogin: String = "Email"
@@ -21,6 +22,8 @@ struct LoginView: View {
     private let bottomHelperTextSignUp: String = "Already a member ?"
     private let signUpText: String = "Sign Up"
     private let loginText: String = "Login"
+    private let signInText: String = "Sign In"
+    private let createAccountText: String = "Create Account"
 
     var body: some View {
         ZStack {
@@ -62,28 +65,23 @@ struct LoginView: View {
                             .frame(width: 10)
                     }
 
-                    if !showSignUpView {
-                        Button(action: {
-                            viewModel.signInWithGoogle()
-                        }, label: {
-                            Text("Sign In")
-                                .padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
-                                .foregroundStyle(Constants.Colors.textColor)
-                                .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
-                        })
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    } else {
-                        Button(action: {
-                            viewModel.signInWithGoogle()
-                        }, label: {
-                            Text("Create Account")
-                                .padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
-                                .foregroundStyle(Constants.Colors.textColor)
-                                .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
-                        })
+                    Button(action: {
+                        if !showSignUpView {
+                            viewModel.signInWithCredentials()
+                        } else {
+                            viewModel.createAccount()
+                        }
+                    }, label: {
+                        Text(showSignUpView ? createAccountText : signInText)
+                            .padding(EdgeInsets(top: 15, leading: 15, bottom: 15, trailing: 15))
+                            .foregroundStyle(Constants.Colors.textColor)
+                            .background(RoundedRectangle(cornerRadius: 16).fill(Constants.Colors.bgColor))
+                    })
 
+                    if showSignUpView {
                         Text("or")
                             .font(.subheadline)
+                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
                     }
 
                     Button(action: {
@@ -182,4 +180,5 @@ struct CustomTextField: View {
 
 #Preview {
     LoginView()
+        .environmentObject(AuthenticationViewModel())
 }

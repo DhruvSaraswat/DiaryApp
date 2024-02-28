@@ -18,6 +18,36 @@ final class AuthenticationViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
 
+    // TODO: Before signing in, check the username and/or password values are not empty
+    func signInWithCredentials() {
+        Auth.auth().signIn(withEmail: username, password: password) { [unowned self] authDataResult, error in
+            if let error = error {
+                debugPrint("ERROR WHILE SIGNING INTO ACCOUNT - \(error.localizedDescription)")
+            } else {
+                if let userId = authDataResult?.user.uid {
+                    self.state = .signedIn(userId: userId)
+                } else {
+                    debugPrint("uId (userId) not found in Firebase response when creating account, unable to proceed further")
+                }
+            }
+        }
+    }
+
+    // TODO: Before creating an account, verify that the username is a vald email, and the password is sufficiently complex.
+    func createAccount() {
+        Auth.auth().createUser(withEmail: username, password: password) { [unowned self] authDataResult, error in
+            if let error = error {
+                debugPrint("ERROR WHILE CREATING ACCOUNT - \(error.localizedDescription)")
+            } else {
+                if let userId = authDataResult?.user.uid {
+                    self.state = .signedIn(userId: userId)
+                } else {
+                    debugPrint("uId (userId) not found in Firebase response when creating account, unable to proceed further")
+                }
+            }
+        }
+    }
+
     func signInWithGoogle() {
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
             GIDSignIn.sharedInstance.restorePreviousSignIn { [unowned self] user, error in
