@@ -15,6 +15,8 @@ final class AuthenticationViewModel: ObservableObject {
     }
 
     @Published var state: SignInState = .signedOut
+    @Published var username: String = ""
+    @Published var password: String = ""
 
     func signInWithGoogle() {
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {

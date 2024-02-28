@@ -10,8 +10,6 @@ import SwiftUI
 struct LoginView: View {
     @EnvironmentObject private var viewModel: AuthenticationViewModel
     @Environment(\.colorScheme) private var colorScheme
-    @State private var username: String = ""
-    @State private var password: String = ""
     @State private var showSignUpView: Bool = false
     private let loginTitle: String = "Welcome to your Diary!"
     private let signUpTitle: String = "Sign Up"
@@ -47,13 +45,13 @@ struct LoginView: View {
                         VStack(spacing: 0) {
                             CustomTextField(isPassword: false,
                                             placeholderText: showSignUpView ? emailPlaceholderTextSignUp : emailPlaceholderTextLogin,
-                                            binding: $username,
+                                            binding: $viewModel.username,
                                             showDivider: true,
                                             image: Image(systemName: "envelope"))
 
                             CustomTextField(isPassword: true,
                                             placeholderText: showSignUpView ? passwordPlaceholderTextSignUp : passwordPlaceholderTextLogin,
-                                            binding: $password,
+                                            binding: $viewModel.password,
                                             showDivider: false,
                                             image: Image(systemName: "lock"))
                         }
