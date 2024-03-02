@@ -14,44 +14,7 @@ struct HomeView: View {
     private let user = GIDSignIn.sharedInstance.currentUser
 
     var body: some View {
-        NavigationView {
-            VStack {
-                HStack {
-                    NetworkImage(url: user?.profile?.imageURL(withDimension: 200))
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 100, height: 100, alignment: .center)
-                        .clipShape(Capsule())
-
-                    VStack(alignment: .leading) {
-                        Text(user?.profile?.name ?? "")
-                            .font(.headline)
-
-                        Text(user?.profile?.email ?? "")
-                            .font(.subheadline)
-                    }
-
-                    Spacer()
-                }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(12)
-                .padding()
-
-                Spacer()
-
-                Button(action: viewModel.signOut) {
-                    Text("Sign Out")
-                        .foregroundStyle(Color.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color(.systemIndigo))
-                        .clipShape(Capsule())
-                        .padding()
-                }
-            }
-            .navigationTitle("Diary")
-        }
+        CalendarView()
     }
 }
 
@@ -72,4 +35,9 @@ struct NetworkImage: View {
                 .aspectRatio(contentMode: .fit)
         }
     }
+}
+
+#Preview {
+    HomeView()
+        .environmentObject(AuthenticationViewModel())
 }
