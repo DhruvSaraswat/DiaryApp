@@ -11,11 +11,12 @@ import SwiftUI
 struct CalendarView: View {
     @State private var selectedDate: Date = Date.now
 
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+    }
+
     var body: some View {
-        VStack {
-            Text("\(selectedDate)")
-            CalenderViewRepresentable(selectedDate: $selectedDate)
-        }
+        CalenderViewRepresentable(selectedDate: $selectedDate)
     }
 }
 
@@ -39,6 +40,8 @@ struct CalenderViewRepresentable: UIViewRepresentable {
         calendar.appearance.headerTitleColor = UIColor.brown
         calendar.appearance.borderRadius = 0.5
         calendar.appearance.titleDefaultColor = (colorScheme == .dark) ? UIColor.white : UIColor.black
+        calendar.appearance.calendar.headerHeight = 30
+        calendar.appearance.calendar.weekdayHeight = 40
         return calendar
     }
 
@@ -66,5 +69,5 @@ struct CalenderViewRepresentable: UIViewRepresentable {
 }
 
 #Preview {
-    CalendarView()
+    CalendarView(selectedDate: Date.now)
 }
