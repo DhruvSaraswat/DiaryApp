@@ -12,22 +12,38 @@ struct DiaryEntryView: View {
 
     var date: Date = Date.now
 
+    @State var title: String
+    @State var story: String
+
     var body: some View {
-        Text("This is my diary entry")
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }, label: {
-                        Image(systemName: "arrow.backward")
-                            .tint(Constants.Colors.backArrowTint)
-                    })
-                }
+        VStack {
+            TextField("", text: $title, prompt: Text("Title").font(.title), axis: .vertical)
+                .padding(EdgeInsets(top: 10, leading: 20, bottom: -10, trailing: 0))
+                .font(.title)
+
+            Divider()
+                .padding()
+
+            TextField("", text: $story, prompt: Text("Story").font(.title2), axis: .vertical)
+                .padding(EdgeInsets(top: -10, leading: 20, bottom: 0, trailing: 0))
+                .font(.title3)
+
+            Spacer()
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    dismiss()
+                }, label: {
+                    Image(systemName: "arrow.backward")
+                        .tint(Constants.Colors.backArrowTint)
+                })
             }
+        }
     }
 }
 
 #Preview {
-    DiaryEntryView()
+    DiaryEntryView(title: "", story: "")
 }

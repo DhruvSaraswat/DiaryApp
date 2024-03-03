@@ -38,7 +38,7 @@ struct HomeView: View {
                 Spacer()
 
                 NavigationLink {
-                    DiaryEntryView()
+                    DiaryEntryView(title: "", story: "")
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
