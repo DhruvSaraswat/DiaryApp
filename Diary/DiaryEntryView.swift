@@ -10,8 +10,7 @@ import SwiftUI
 struct DiaryEntryView: View {
     @Environment(\.dismiss) private var dismiss
 
-    var date: Date = Date.now
-
+    @State var date: Date
     @State var title: String
     @State var story: String
 
@@ -40,10 +39,15 @@ struct DiaryEntryView: View {
                         .tint(Constants.Colors.backArrowTint)
                 })
             }
+
+            ToolbarItem(placement: .principal) {
+                Text("\(date.getTitleDisplayDate())")
+                    .foregroundStyle(Constants.Colors.backArrowTint)
+            }
         }
     }
 }
 
 #Preview {
-    DiaryEntryView(title: "", story: "")
+    DiaryEntryView(date: Date.now, title: "", story: "")
 }

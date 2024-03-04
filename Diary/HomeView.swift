@@ -16,7 +16,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                CalendarView(selectedDate: selectedDate)
+                CalendarView(selectedDate: $selectedDate)
                     .frame(height: 400)
 
                 HStack(alignment: .lastTextBaseline) {
@@ -38,7 +38,7 @@ struct HomeView: View {
                 Spacer()
 
                 NavigationLink {
-                    DiaryEntryView(title: "", story: "")
+                    DiaryEntryView(date: selectedDate, title: "", story: "")
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .resizable()

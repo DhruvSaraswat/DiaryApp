@@ -9,11 +9,7 @@ import FSCalendar
 import SwiftUI
 
 struct CalendarView: View {
-    @State private var selectedDate: Date = Date.now
-
-    init(selectedDate: Date) {
-        self.selectedDate = selectedDate
-    }
+    @Binding var selectedDate: Date
 
     var body: some View {
         CalenderViewRepresentable(selectedDate: $selectedDate)
@@ -66,8 +62,4 @@ struct CalenderViewRepresentable: UIViewRepresentable {
             parent.selectedDate = date
         }
     }
-}
-
-#Preview {
-    CalendarView(selectedDate: Date.now)
 }
