@@ -23,11 +23,19 @@ struct DiaryEntryView: View {
             Divider()
                 .padding()
 
-            TextField("", text: $story, prompt: Text("Story").font(.title2), axis: .vertical)
+            TextField("", text: $story, prompt: Text("Tell your story ...").font(.title2), axis: .vertical)
                 .padding(EdgeInsets(top: -10, leading: 20, bottom: 0, trailing: 0))
                 .font(.title3)
 
             Spacer()
+
+            Button(action: {}, label: {
+                Text("Save")
+                    .padding(EdgeInsets(top: 12, leading: 30, bottom: 12, trailing: 30))
+                    .foregroundStyle(Color.white)
+                    .background(Color.brown, in: Capsule())
+            })
+            .padding()
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
