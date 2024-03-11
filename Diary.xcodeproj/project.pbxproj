@@ -142,7 +142,6 @@
 				7B36D2062B84C365002A5C48 /* ContentView.swift */,
 				7B36D2082B84C366002A5C48 /* Assets.xcassets */,
 				7B36D20A2B84C366002A5C48 /* Preview Content */,
-				7BA4F3582B88906C0073A13B /* HomeView.swift */,
 				7BA4F35A2B8D04590073A13B /* Constants.swift */,
 				7B1CE1D52B9338F0007D5397 /* CalendarView.swift */,
 				7B1CE1D92B94DC51007D5397 /* Extensions.swift */,
@@ -196,6 +195,7 @@
 		7B4170C52B9F98C000F0E43E /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				7B4170C82B9F9F2E00F0E43E /* Home */,
 				7B4170C72B9F98E100F0E43E /* Login */,
 				7B4170C62B9F98C700F0E43E /* DiaryEntry */,
 			);
@@ -218,6 +218,14 @@
 				7BA4F3562B888CEB0073A13B /* LoginView.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		7B4170C82B9F9F2E00F0E43E /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				7BA4F3582B88906C0073A13B /* HomeView.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
