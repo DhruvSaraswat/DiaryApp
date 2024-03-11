@@ -9,27 +9,27 @@ import SwiftUI
 
 struct DiaryEntryView: View {
     @Environment(\.dismiss) private var dismiss
-
-    @State var date: Date
-    @State var title: String
-    @State var story: String
+    @EnvironmentObject private var viewModel: DiaryEntryViewModel
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
 
     var body: some View {
         VStack {
-            TextField("", text: $title, prompt: Text("Title").font(.title), axis: .vertical)
+            TextField("", text: $viewModel.title, prompt: Text("Title").font(.title), axis: .vertical)
                 .padding(EdgeInsets(top: 10, leading: 20, bottom: -10, trailing: 0))
                 .font(.title)
 
             Divider()
                 .padding()
 
-            TextField("", text: $story, prompt: Text("Tell your story ...").font(.title2), axis: .vertical)
+            TextField("", text: $viewModel.story, prompt: Text("Tell your story ...").font(.title2), axis: .vertical)
                 .padding(EdgeInsets(top: -10, leading: 20, bottom: 0, trailing: 0))
                 .font(.title3)
 
             Spacer()
 
-            Button(action: {}, label: {
+            Button(action: {
+                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId())
+            }, label: {
                 Text("Save")
                     .padding(EdgeInsets(top: 12, leading: 30, bottom: 12, trailing: 30))
                     .foregroundStyle(Color.white)
@@ -49,7 +49,7 @@ struct DiaryEntryView: View {
             }
 
             ToolbarItem(placement: .principal) {
-                Text("\(date.getTitleDisplayDate())")
+                Text("\(viewModel.diaryDate.getTitleDisplayDate())")
                     .foregroundStyle(Constants.Colors.backArrowTint)
             }
         }
@@ -57,5 +57,6 @@ struct DiaryEntryView: View {
 }
 
 #Preview {
-    DiaryEntryView(date: Date.now, title: "", story: "")
+    DiaryEntryView()
+        .environmentObject(DiaryEntryViewModel(title: "", story: "", diaryDate: Date.now, createdAtDate: Date.now, lastEditedAtDate: Date.now))
 }

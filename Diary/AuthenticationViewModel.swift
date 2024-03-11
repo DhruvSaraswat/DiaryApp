@@ -99,4 +99,11 @@ final class AuthenticationViewModel: ObservableObject {
             debugPrint("ERROR WHILE SIGNING OUT - \(error.localizedDescription)")
         }
     }
+
+    func getUserId() -> String? {
+        switch state {
+        case .signedIn(let userId): return userId
+        case .signedOut: return nil
+        }
+    }
 }

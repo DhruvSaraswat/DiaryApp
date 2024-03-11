@@ -38,7 +38,12 @@ struct HomeView: View {
                 Spacer()
 
                 NavigationLink {
-                    DiaryEntryView(date: selectedDate, title: "", story: "")
+                    DiaryEntryView()
+                        .environmentObject(DiaryEntryViewModel(title: "",
+                                                               story: "",
+                                                               diaryDate: selectedDate,
+                                                               createdAtDate: Date.now,
+                                                               lastEditedAtDate: Date.now))
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
