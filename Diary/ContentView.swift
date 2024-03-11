@@ -14,6 +14,7 @@ struct ContentView: View {
         switch viewModel.state {
         case .signedIn:
             HomeView()
+                .environmentObject(HomeViewModel())
         case .signedOut:
             LoginView()
         }

@@ -10,6 +10,7 @@ import GoogleSignIn
 
 struct HomeView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @State private var selectedDate: Date = Date.now
     private let user = GIDSignIn.sharedInstance.currentUser
 
@@ -52,10 +53,14 @@ struct HomeView: View {
                 }
             }
         }
+        .onAppear(perform: {
+            homeViewModel.fetchAllDiaryEntries(userId: viewModel.getUserId())
+        })
     }
 }
 
 #Preview {
     HomeView()
         .environmentObject(AuthenticationViewModel())
+        .environmentObject(HomeViewModel())
 }

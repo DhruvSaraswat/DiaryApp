@@ -49,9 +49,12 @@ final class DiaryEntryViewModel: ObservableObject {
 
         networkEngine.request(request: Request.saveDiaryEntry(userId: id, diaryEntry: diaryEntry)) { (result: Result<DiaryEntry?, APIError>) in
             switch result {
-            case .success(let success):
+            case .success:
+                // TODO: Show a success toast
                 print("SUCCESS")
+                
             case .failure(let failure):
+                // TODO: Show an error toast
                 print("FAILURE")
             }
         }
