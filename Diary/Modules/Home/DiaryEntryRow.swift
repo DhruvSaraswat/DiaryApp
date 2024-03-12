@@ -21,7 +21,7 @@ struct DiaryEntryRow: View {
         VStack(alignment: .leading, spacing: -5) {
             Text("\(date.getDisplayDateForDiaryEntry())")
                 .font(.subheadline)
-                .foregroundStyle(Color(UIColor(red: 194 / 255, green: 181 / 255, blue:  168 / 255, alpha: 1)))
+                .foregroundStyle(Constants.Colors.diaryEntryRowBackgroundColor)
                 .bold()
 
             Text(title)

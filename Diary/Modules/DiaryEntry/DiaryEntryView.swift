@@ -9,19 +9,20 @@ import SwiftUI
 
 struct DiaryEntryView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var viewModel: DiaryEntryViewModel
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
 
     var body: some View {
         VStack {
-            TextField("", text: $viewModel.title, prompt: Text("Title").font(.title), axis: .vertical)
+            TextField("", text: $viewModel.diaryEntryItem.title, prompt: Text("Title").font(.title), axis: .vertical)
                 .padding(EdgeInsets(top: 10, leading: 20, bottom: -10, trailing: 0))
                 .font(.title)
 
             Divider()
                 .padding()
 
-            TextField("", text: $viewModel.story, prompt: Text("Tell your story ...").font(.title2), axis: .vertical)
+            TextField("", text: $viewModel.diaryEntryItem.story, prompt: Text("Tell your story ...").font(.title2), axis: .vertical)
                 .padding(EdgeInsets(top: -10, leading: 20, bottom: 0, trailing: 0))
                 .font(.title3)
 
@@ -49,14 +50,9 @@ struct DiaryEntryView: View {
             }
 
             ToolbarItem(placement: .principal) {
-                Text("\(viewModel.diaryDate.getTitleDisplayDate())")
+                Text("\(viewModel.diaryEntryItem.diaryTimestamp.getTitleDisplayDate())")
                     .foregroundStyle(Constants.Colors.backArrowTint)
             }
         }
     }
-}
-
-#Preview {
-    DiaryEntryView()
-        .environmentObject(DiaryEntryViewModel(title: "", story: "", diaryDate: Date.now, createdAtDate: Date.now, lastEditedAtDate: Date.now))
 }

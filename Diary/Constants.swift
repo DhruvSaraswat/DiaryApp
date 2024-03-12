@@ -14,5 +14,6 @@ struct Constants {
         static let selectedDateCircleColor = UIColor(red: 243 / 255, green: 178 / 255, blue: 134 / 255, alpha: 1)
         static let weekdayColor = UIColor(red: 207 / 255, green: 195 / 255, blue: 178 / 255, alpha: 1)
         static let backArrowTint = Color(uiColor: UIColor(red: 207 / 255, green: 207 / 255, blue: 207 / 255, alpha: 1))
+        static let diaryEntryRowBackgroundColor = Color(UIColor(red: 194 / 255, green: 181 / 255, blue:  168 / 255, alpha: 1))
     }
 }

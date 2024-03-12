@@ -10,13 +10,13 @@ import SwiftData
 
 @Model
 final class DiaryEntryItem {
-    let title: String?
-    let story: String?
-    let diaryTimestamp: Int64?
-    let createdAtTimestamp: Int64?
-    let lastEditedAtTimestamp: Int64?
+    var title: String
+    var story: String
+    @Attribute(.unique) let diaryTimestamp: Int64
+    var createdAtTimestamp: Int64
+    var lastEditedAtTimestamp: Int64
 
-    init(title: String?, story: String?, diaryTimestamp: Int64?, createdAtTimestamp: Int64?, lastEditedAtTimestamp: Int64?) {
+    init(title: String, story: String, diaryTimestamp: Int64, createdAtTimestamp: Int64, lastEditedAtTimestamp: Int64) {
         self.title = title
         self.story = story
         self.diaryTimestamp = diaryTimestamp

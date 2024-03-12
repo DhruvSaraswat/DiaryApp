@@ -46,3 +46,9 @@ extension Date {
         return calendar.component(.year, from: self)
     }
 }
+
+extension Int64 {
+    func getTitleDisplayDate() -> String {
+        Date(timeIntervalSince1970: Double(self)).getTitleDisplayDate()
+    }
+}

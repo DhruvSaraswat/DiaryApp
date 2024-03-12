@@ -8,44 +8,24 @@
 import Foundation
 
 final class DiaryEntryViewModel: ObservableObject {
-    @Published var title: String = "" {
-        didSet {
-            lastEditedAtDate = Date.now
-        }
-    }
-    @Published var story: String = "" {
-        didSet {
-            lastEditedAtDate = Date.now
-        }
-    }
-    let diaryDate: Date
-    private let createdAtDate: Date
-    private var lastEditedAtDate: Date
+    @Published var diaryEntryItem: DiaryEntryItem
 
     private var networkEngine: NetworkEngine
 
-    init(title: String,
-         story: String,
-         diaryDate: Date,
-         createdAtDate: Date,
-         lastEditedAtDate: Date,
+    init(diaryEntryItem: DiaryEntryItem,
          networkEngine: NetworkEngine = NetworkEngineImpl()) {
-        self.title = title
-        self.story = story
-        self.diaryDate = diaryDate
-        self.createdAtDate = createdAtDate
-        self.lastEditedAtDate = lastEditedAtDate
+        self.diaryEntryItem = diaryEntryItem
         self.networkEngine = networkEngine
     }
 
     func saveDiaryEntry(userId: String?) {
         guard let id = userId else { return }
 
-        let diaryEntry = DiaryEntry(title: title,
-                                    story: story,
-                                    diaryTimestamp: Int64(diaryDate.timeIntervalSince1970),
-                                    createdAtTimestamp: Int64(createdAtDate.timeIntervalSince1970),
-                                    lastEditedAtTimestamp: Int64(lastEditedAtDate.timeIntervalSince1970))
+        let diaryEntry = DiaryEntry(title: diaryEntryItem.title,
+                                    story: diaryEntryItem.story,
+                                    diaryTimestamp: diaryEntryItem.diaryTimestamp,
+                                    createdAtTimestamp: diaryEntryItem.createdAtTimestamp,
+                                    lastEditedAtTimestamp: diaryEntryItem.lastEditedAtTimestamp)
 
         networkEngine.request(request: Request.saveDiaryEntry(userId: id, diaryEntry: diaryEntry)) { (result: Result<DiaryEntry?, APIError>) in
             switch result {
