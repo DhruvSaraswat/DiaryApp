@@ -7,16 +7,12 @@
 
 import Firebase
 import GoogleSignIn
+import SwiftUI
 
 final class AuthenticationViewModel: ObservableObject {
-    enum SignInState {
-        case signedIn(userId: String)
-        case signedOut
-    }
-
-    @Published var state: SignInState = .signedOut
     @Published var username: String = ""
     @Published var password: String = ""
+    @AppStorage("userId") private var userId: String = ""
 
     // TODO: Before signing in, check the username and/or password values are not empty
     func signInWithCredentials() {
@@ -25,7 +21,7 @@ final class AuthenticationViewModel: ObservableObject {
                 debugPrint("ERROR WHILE SIGNING INTO ACCOUNT - \(error.localizedDescription)")
             } else {
                 if let userId = authDataResult?.user.uid {
-                    self.state = .signedIn(userId: userId)
+                    self.userId = userId
                 } else {
                     debugPrint("uId (userId) not found in Firebase response when creating account, unable to proceed further")
                 }
@@ -40,7 +36,7 @@ final class AuthenticationViewModel: ObservableObject {
                 debugPrint("ERROR WHILE CREATING ACCOUNT - \(error.localizedDescription)")
             } else {
                 if let userId = authDataResult?.user.uid {
-                    self.state = .signedIn(userId: userId)
+                    self.userId = userId
                 } else {
                     debugPrint("uId (userId) not found in Firebase response when creating account, unable to proceed further")
                 }
@@ -81,7 +77,7 @@ final class AuthenticationViewModel: ObservableObject {
                 debugPrint("ERROR WHILE AUTHENTICATING WITH GOOGLE - \(error.localizedDescription)")
             } else {
                 if let userId = authDataResult?.user.uid {
-                    self.state = .signedIn(userId: userId)
+                    self.userId = userId
                 } else {
                     debugPrint("uId (userId) not found in Firebase response, unable to proceed further")
                 }
@@ -94,16 +90,17 @@ final class AuthenticationViewModel: ObservableObject {
 
         do {
             try Auth.auth().signOut()
-            state = .signedOut
+            self.userId = ""
         } catch {
             debugPrint("ERROR WHILE SIGNING OUT - \(error.localizedDescription)")
         }
     }
 
-    func getUserId() -> String? {
-        switch state {
-        case .signedIn(let userId): return userId
-        case .signedOut: return nil
-        }
+    func getUserId() -> String {
+        userId
+    }
+
+    var isUserSignedIn: Bool {
+        !userId.isEmpty
     }
 }

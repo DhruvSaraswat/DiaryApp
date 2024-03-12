@@ -7,6 +7,7 @@
 
 import Firebase
 import SwiftUI
+import SwiftData
 
 @main
 struct DiaryApp: App {
@@ -22,6 +23,7 @@ struct DiaryApp: App {
                 .environmentObject(viewModel)
                 .onAppear(perform: UIApplication.shared.addTapGestureRecognizer)
         }
+        .modelContainer(for: DiaryEntryItem.self)
     }
 }
 

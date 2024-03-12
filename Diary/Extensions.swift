@@ -8,6 +8,14 @@
 import Foundation
 
 extension Date {
+    func getDisplayDateForDiaryEntry() -> String {
+        let month = getMonth()
+        let day = String(getDayOfMonth())
+        let year = String(getYear())
+
+        return "\(day)/\(month)/\(year)"
+    }
+
     func getTitleDisplayDate() -> String {
         let weekday = getWeekday()
         let month = getMonth()

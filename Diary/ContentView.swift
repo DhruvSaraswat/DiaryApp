@@ -11,11 +11,10 @@ struct ContentView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
 
     var body: some View {
-        switch viewModel.state {
-        case .signedIn:
+        if viewModel.isUserSignedIn {
             HomeView()
                 .environmentObject(HomeViewModel())
-        case .signedOut:
+        } else {
             LoginView()
         }
     }

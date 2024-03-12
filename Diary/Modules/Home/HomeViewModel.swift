@@ -6,21 +6,31 @@
 //
 
 import Foundation
+import SwiftData
 
 final class HomeViewModel: ObservableObject {
-    private var networkEngine: NetworkEngine
+    private let networkEngine: NetworkEngine
 
     init(networkEngine: NetworkEngine = NetworkEngineImpl()) {
         self.networkEngine = networkEngine
     }
 
-    func fetchAllDiaryEntries(userId: String?) {
-        guard let id = userId else { return }
+    func fetchAllDiaryEntries(userId: String, context: ModelContext) {
+        guard !userId.isEmpty else { return }
 
-        self.networkEngine.request(request: Request.fetchAllEntries(userId: id)) { (result: Result<[DiaryEntry]?, APIError>) in
+        self.networkEngine.request(request: Request.fetchAllEntries(userId: userId)) { (result: Result<[DiaryEntry]?, APIError>) in
             switch result {
             case .success(let diaryEntries):
                 print("SUCCESS - diaryEntries = \(String(describing: diaryEntries))")
+                for diaryEntry in diaryEntries ?? [] {
+                    let diaryEntryItem = DiaryEntryItem(title: diaryEntry.title,
+                                                        story: diaryEntry.story,
+                                                        diaryTimestamp: diaryEntry.diaryTimestamp,
+                                                        createdAtTimestamp: diaryEntry.createdAtTimestamp,
+                                                        lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp)
+                    context.insert(diaryEntryItem)
+                }
+
             case .failure(let failure):
                 print("FAULIRE - failure = \(failure)")
             }
