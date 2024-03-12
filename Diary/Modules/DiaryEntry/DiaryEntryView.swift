@@ -42,6 +42,7 @@ struct DiaryEntryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: {
+                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId())
                     dismiss()
                 }, label: {
                     Image(systemName: "arrow.backward")
