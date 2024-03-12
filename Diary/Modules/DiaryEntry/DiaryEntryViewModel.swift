@@ -21,6 +21,10 @@ final class DiaryEntryViewModel: ObservableObject {
     func saveDiaryEntry(userId: String?) {
         guard let id = userId else { return }
 
+        if diaryEntryItem.title.isEmpty {
+            diaryEntryItem.title = diaryEntryItem.diaryTimestamp.getTitleDisplayDate()
+        }
+
         let diaryEntry = DiaryEntry(title: diaryEntryItem.title,
                                     story: diaryEntryItem.story,
                                     diaryTimestamp: diaryEntryItem.diaryTimestamp,
