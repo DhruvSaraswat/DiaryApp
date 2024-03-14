@@ -45,6 +45,7 @@ struct HomeView: View {
                             .padding()
                     })
                 }
+                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
 
                 List {
                     ForEach(items.prefix(2)) { item in
@@ -59,6 +60,8 @@ struct HomeView: View {
                     }
                 }
                 .listStyle(.plain)
+                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
+                .scrollDisabled(true)
 
                 Spacer()
 
