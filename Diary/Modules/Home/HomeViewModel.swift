@@ -23,16 +23,20 @@ final class HomeViewModel: ObservableObject {
             case .success(let diaryEntries):
                 print("SUCCESS - diaryEntries = \(String(describing: diaryEntries))")
                 for diaryEntry in diaryEntries ?? [] {
+                    let diaryTimestamp: Int64 = diaryEntry.diaryTimestamp ?? Int64(Date.now.timeIntervalSince1970)
+                    let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
+                    
                     let diaryEntryItem = DiaryEntryItem(title: diaryEntry.title ?? "",
                                                         story: diaryEntry.story ?? "",
-                                                        diaryTimestamp: diaryEntry.diaryTimestamp ?? Int64(Date.now.timeIntervalSince1970),
+                                                        diaryTimestamp: diaryTimestamp,
+                                                        diaryDate: diaryDate,
                                                         createdAtTimestamp: diaryEntry.createdAtTimestamp ?? Int64(Date.now.timeIntervalSince1970),
                                                         lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp ?? Int64(Date.now.timeIntervalSince1970))
                     context.insert(diaryEntryItem)
                 }
 
             case .failure(let failure):
-                print("FAULIRE - failure = \(failure)")
+                print("FAILURE - failure = \(failure)")
             }
         }
     }

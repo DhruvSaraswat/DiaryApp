@@ -49,8 +49,7 @@ struct HomeView: View {
 
                 List {
                     ForEach(items.prefix(2)) { item in
-                        DiaryEntryRow(date: Date(timeIntervalSince1970: Double(item.diaryTimestamp)),
-                                      title: item.title)
+                        DiaryEntryRow(diaryDate: item.diaryDate, title: item.title)
                         .listRowSeparator(.hidden)
                         .listRowBackground(
                             RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
@@ -68,7 +67,7 @@ struct HomeView: View {
                 NavigationLink {
                     DiaryEntryView()
                         .environmentObject(
-                            createDiaryEntryViewModel(diaryEntryItem: fetchDiaryEntryItem(diaryTimestamp: Int64(selectedDate.timeIntervalSince1970)))
+                            createDiaryEntryViewModel(diaryEntryItem: fetchDiaryEntryItem(diaryDate: selectedDate.getDisplayDateForDiaryEntry()))
                             )
                 } label: {
                     Image(systemName: "plus.circle.fill")
@@ -87,17 +86,20 @@ struct HomeView: View {
         if let item = diaryEntryItem {
             return DiaryEntryViewModel(diaryEntryItem: item)
         }
+        let diaryTimestamp: Int64 = Int64(selectedDate.timeIntervalSince1970)
+        let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
+
         let newDiaryEntry = DiaryEntryItem(title: "",
                                            story: "",
-                                           diaryTimestamp: Int64(selectedDate.timeIntervalSince1970),
+                                           diaryTimestamp: diaryTimestamp,
+                                           diaryDate: diaryDate,
                                            createdAtTimestamp: Int64(Date.now.timeIntervalSince1970),
                                            lastEditedAtTimestamp: Int64(Date.now.timeIntervalSince1970))
-        modelContext.insert(newDiaryEntry)
         return DiaryEntryViewModel(diaryEntryItem: newDiaryEntry)
     }
 
-    private func fetchDiaryEntryItem(diaryTimestamp: Int64) -> DiaryEntryItem? {
-        var descriptor = FetchDescriptor<DiaryEntryItem>(predicate: #Predicate { $0.diaryTimestamp == diaryTimestamp })
+    private func fetchDiaryEntryItem(diaryDate: String) -> DiaryEntryItem? {
+        var descriptor = FetchDescriptor<DiaryEntryItem>(predicate: #Predicate { $0.diaryDate == diaryDate })
         descriptor.fetchLimit = 1
         return try? modelContext.fetch(descriptor).first
     }

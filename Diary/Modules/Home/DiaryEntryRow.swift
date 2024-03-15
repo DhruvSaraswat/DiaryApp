@@ -9,17 +9,17 @@ import Foundation
 import SwiftUI
 
 struct DiaryEntryRow: View {
-    private var date: Date
+    private var diaryDate: String
     private var title: String
 
-    init(date: Date, title: String) {
-        self.date = date
+    init(diaryDate: String, title: String) {
+        self.diaryDate = diaryDate
         self.title = title
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: -5) {
-            Text("\(date.getDisplayDateForDiaryEntry())")
+            Text(diaryDate)
                 .font(.subheadline)
                 .foregroundStyle(Constants.Colors.diaryEntryRowBackgroundColor)
                 .bold()
@@ -33,5 +33,5 @@ struct DiaryEntryRow: View {
 }
 
 #Preview {
-    DiaryEntryRow(date: Date.now, title: "Today was a good day")
+    DiaryEntryRow(diaryDate: Date.now.getDisplayDateForDiaryEntry(), title: "Today was a good day")
 }

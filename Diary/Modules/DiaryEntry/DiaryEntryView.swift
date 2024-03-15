@@ -29,7 +29,7 @@ struct DiaryEntryView: View {
             Spacer()
 
             Button(action: {
-                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId())
+                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(), modelContext: modelContext)
             }, label: {
                 Text("Save")
                     .padding(EdgeInsets(top: 12, leading: 30, bottom: 12, trailing: 30))
@@ -42,7 +42,7 @@ struct DiaryEntryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: {
-                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId())
+                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(), modelContext: modelContext)
                     dismiss()
                 }, label: {
                     Image(systemName: "arrow.backward")

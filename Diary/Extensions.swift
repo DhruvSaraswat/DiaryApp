@@ -13,6 +13,7 @@ extension Date {
         let day = String(getDayOfMonth())
         let year = String(getYear())
 
+        /// An example return value - "14/March/2024"
         return "\(day)/\(month)/\(year)"
     }
 
@@ -50,5 +51,9 @@ extension Date {
 extension Int64 {
     func getTitleDisplayDate() -> String {
         Date(timeIntervalSince1970: Double(self)).getTitleDisplayDate()
+    }
+
+    func getDisplayDateForDiaryEntry() -> String {
+        Date(timeIntervalSince1970: Double(self)).getDisplayDateForDiaryEntry()
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 final class DiaryEntryViewModel: ObservableObject {
     @Published var diaryEntryItem: DiaryEntryItem
@@ -18,13 +19,14 @@ final class DiaryEntryViewModel: ObservableObject {
         self.networkEngine = networkEngine
     }
 
-    func saveDiaryEntry(userId: String?) {
+    func saveDiaryEntry(userId: String?, modelContext: ModelContext) {
         guard let id = userId else { return }
 
         guard !diaryEntryItem.title.isEmpty && !diaryEntryItem.story.isEmpty else {
             return
         }
 
+        modelContext.insert(diaryEntryItem)
         let diaryEntry = DiaryEntry(title: diaryEntryItem.title,
                                     story: diaryEntryItem.story,
                                     diaryTimestamp: diaryEntryItem.diaryTimestamp,
