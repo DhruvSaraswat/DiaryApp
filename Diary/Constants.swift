@@ -17,11 +17,4 @@ struct Constants {
         static let backArrowTint = Color(uiColor: UIColor(red: 207 / 255, green: 207 / 255, blue: 207 / 255, alpha: 1))
         static let diaryEntryRowBackgroundColor = Color(UIColor(red: 194 / 255, green: 181 / 255, blue:  168 / 255, alpha: 1))
     }
-
-    static var fetchDescriptor: FetchDescriptor<DiaryEntryItem> = {
-        let descriptor = FetchDescriptor<DiaryEntryItem>(
-            sortBy: [.init(\.diaryTimestamp, order: .reverse)]
-        )
-        return descriptor
-    }()
 }

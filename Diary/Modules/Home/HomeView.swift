@@ -13,7 +13,7 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     @EnvironmentObject var homeViewModel: HomeViewModel
     @Environment(\.modelContext) private var modelContext
-    @Query(Constants.fetchDescriptor) private var items: [DiaryEntryItem]
+    @Query(Persistence.fetchDescriptor) private var items: [DiaryEntryItem]
     @State private var selectedDate: Date = Date.now
     private let user = GIDSignIn.sharedInstance.currentUser
 
@@ -94,8 +94,7 @@ struct HomeView: View {
     }
 
     private func fetchDiaryEntryItem(diaryDate: String) -> DiaryEntryItem? {
-        var descriptor = FetchDescriptor<DiaryEntryItem>(predicate: #Predicate { $0.diaryDate == diaryDate })
-        descriptor.fetchLimit = 1
+        let descriptor = Persistence.getFetchDescriptor(byDiaryDate: diaryDate)
         return try? modelContext.fetch(descriptor).first
     }
 }

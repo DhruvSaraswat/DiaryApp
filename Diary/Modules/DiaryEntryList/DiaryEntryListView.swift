@@ -12,7 +12,7 @@ import SwiftData
 struct DiaryEntryListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Query(Constants.fetchDescriptor) private var items: [DiaryEntryItem]
+    @Query(Persistence.fetchDescriptor) private var items: [DiaryEntryItem]
 
     var body: some View {
         VStack {

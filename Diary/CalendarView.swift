@@ -20,6 +20,7 @@ struct CalenderViewRepresentable: UIViewRepresentable {
     typealias UIViewType = FSCalendar
     fileprivate var calendar = FSCalendar()
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.modelContext) var modelContext
     @Binding var selectedDate: Date
 
     func makeUIView(context: Context) -> FSCalendar {
@@ -36,6 +37,9 @@ struct CalenderViewRepresentable: UIViewRepresentable {
         calendar.appearance.headerTitleColor = UIColor.brown
         calendar.appearance.borderRadius = 0.5
         calendar.appearance.titleDefaultColor = (colorScheme == .dark) ? UIColor.white : UIColor.black
+        calendar.appearance.eventDefaultColor = UIColor.brown.withAlphaComponent(0.5)
+        calendar.appearance.eventOffset = CGPoint(x: 0, y: 1)
+        calendar.appearance.eventSelectionColor = UIColor.brown
         calendar.appearance.calendar.headerHeight = 30
         calendar.appearance.calendar.weekdayHeight = 40
         return calendar
@@ -60,6 +64,16 @@ struct CalenderViewRepresentable: UIViewRepresentable {
                       didSelect date: Date,
                       at monthPosition: FSCalendarMonthPosition) {
             parent.selectedDate = date
+        }
+
+        func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+            let diaryDate = date.getDisplayDateForDiaryEntry()
+            let descriptor = Persistence.getFetchDescriptor(byDiaryDate: diaryDate)
+            do {
+                return try parent.modelContext.fetchCount(descriptor)
+            } catch {
+                return 0
+            }
         }
     }
 }

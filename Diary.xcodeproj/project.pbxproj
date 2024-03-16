@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B15871C2BA60E0800CDDD50 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15871B2BA60E0800CDDD50 /* Persistence.swift */; };
 		7B1CE1D42B9338B3007D5397 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7B1CE1D32B9338B3007D5397 /* FSCalendar */; };
 		7B1CE1D62B9338F1007D5397 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CE1D52B9338F0007D5397 /* CalendarView.swift */; };
 		7B1CE1D82B945474007D5397 /* DiaryEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CE1D72B945474007D5397 /* DiaryEntryView.swift */; };
@@ -59,6 +60,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7B15871B2BA60E0800CDDD50 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		7B1CE1D52B9338F0007D5397 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		7B1CE1D72B945474007D5397 /* DiaryEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryEntryView.swift; sourceTree = "<group>"; };
 		7B1CE1D92B94DC51007D5397 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 			isa = PBXGroup;
 			children = (
 				7B4170CC2B9FA80600F0E43E /* DiaryEntryItem.swift */,
+				7B15871B2BA60E0800CDDD50 /* Persistence.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 				7B4170BD2B9F617600F0E43E /* Request.swift in Sources */,
 				7BA4F3592B88906C0073A13B /* HomeView.swift in Sources */,
 				7BA4F35B2B8D04590073A13B /* Constants.swift in Sources */,
+				7B15871C2BA60E0800CDDD50 /* Persistence.swift in Sources */,
 				7B4170C42B9F779B00F0E43E /* DiaryEntryViewModel.swift in Sources */,
 				7B4170C22B9F65D800F0E43E /* NetworkEngine.swift in Sources */,
 				7B4170CD2B9FA80600F0E43E /* DiaryEntryItem.swift in Sources */,
