@@ -13,16 +13,9 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     @EnvironmentObject var homeViewModel: HomeViewModel
     @Environment(\.modelContext) private var modelContext
-    @Query(HomeView.fetchDescriptor) private var items: [DiaryEntryItem]
+    @Query(Constants.fetchDescriptor) private var items: [DiaryEntryItem]
     @State private var selectedDate: Date = Date.now
     private let user = GIDSignIn.sharedInstance.currentUser
-
-    static var fetchDescriptor: FetchDescriptor<DiaryEntryItem> {
-        let descriptor = FetchDescriptor<DiaryEntryItem>(
-            sortBy: [.init(\.diaryTimestamp, order: .reverse)]
-        )
-        return descriptor
-    }
 
     var body: some View {
         NavigationStack {
@@ -38,12 +31,14 @@ struct HomeView: View {
 
                     Spacer()
 
-                    Button(action: {}, label: {
+                    NavigationLink {
+                        DiaryEntryListView()
+                    } label: {
                         Text("See All")
                             .font(.callout)
                             .foregroundStyle(Color.brown)
                             .padding()
-                    })
+                    }
                 }
                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
 
