@@ -48,7 +48,7 @@ struct HomeView: View {
                         .listRowSeparator(.hidden)
                         .listRowBackground(
                             RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
-                                .foregroundStyle(Color(UIColor(red: 242 / 255, green: 231 / 255, blue: 225 / 255, alpha: 1)))
+                                .foregroundStyle(Constants.Colors.diaryRowBGColor)
                                 .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: -20))
                         )
                     }
