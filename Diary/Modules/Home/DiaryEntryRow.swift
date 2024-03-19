@@ -9,29 +9,25 @@ import Foundation
 import SwiftUI
 
 struct DiaryEntryRow: View {
-    private var diaryDate: String
-    private var title: String
+    private var diaryEntryItem: DiaryEntryItem
 
-    init(diaryDate: String, title: String) {
-        self.diaryDate = diaryDate
-        self.title = title
+    init(diaryEntryItem: DiaryEntryItem) {
+        self.diaryEntryItem = diaryEntryItem
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: -5) {
-            Text(diaryDate)
-                .font(.subheadline)
-                .foregroundStyle(Constants.Colors.dateTextColor)
-                .bold()
+        NavigationLink(destination: DiaryEntryView().environmentObject(DiaryEntryViewModel(diaryEntryItem: diaryEntryItem))) {
+            VStack(alignment: .leading, spacing: -5) {
+                Text(diaryEntryItem.diaryDate)
+                    .font(.subheadline)
+                    .foregroundStyle(Constants.Colors.dateTextColor)
+                    .bold()
 
-            Text(title)
-                .font(.title)
-                .foregroundStyle(Color.black)
+                Text(diaryEntryItem.title)
+                    .font(.title)
+                    .foregroundStyle(Color.black)
+            }
+            .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
         }
-        .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
     }
-}
-
-#Preview {
-    DiaryEntryRow(diaryDate: Date.now.getDisplayDateForDiaryEntry(), title: "Today was a good day")
 }

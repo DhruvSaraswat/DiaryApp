@@ -17,11 +17,11 @@ struct DiaryEntryListView: View {
     var body: some View {
         VStack {
             Text("All Diary Entries")
-                .font(.title)
+                .font(.title2)
 
             List {
                 ForEach(items) { item in
-                    DiaryEntryRow(diaryDate: item.diaryDate, title: item.title)
+                    DiaryEntryRow(diaryEntryItem: item)
                     .listRowSeparator(.hidden)
                     .listRowBackground(
                         RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))

@@ -44,7 +44,7 @@ struct HomeView: View {
 
                 List {
                     ForEach(items.prefix(2)) { item in
-                        DiaryEntryRow(diaryDate: item.diaryDate, title: item.title)
+                        DiaryEntryRow(diaryEntryItem: item)
                         .listRowSeparator(.hidden)
                         .listRowBackground(
                             RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
