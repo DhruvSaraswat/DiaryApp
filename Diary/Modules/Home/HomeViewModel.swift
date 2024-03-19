@@ -15,7 +15,7 @@ final class HomeViewModel: ObservableObject {
         self.networkEngine = networkEngine
     }
 
-    func fetchAllDiaryEntries(userId: String, context: ModelContext) {
+    func fetchAllDiaryEntries(userId: String, context: ModelContext, completion: ((_ isSuccessful: Bool) -> Void)?) {
         guard !userId.isEmpty else { return }
 
         self.networkEngine.request(request: Request.fetchAllEntries(userId: userId)) { (result: Result<[DiaryEntry]?, APIError>) in
@@ -34,8 +34,10 @@ final class HomeViewModel: ObservableObject {
                                                         lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp ?? Int64(Date.now.timeIntervalSince1970))
                     context.insert(diaryEntryItem)
                 }
+                completion?(true)
 
             case .failure(let failure):
+                completion?(false)
                 print("FAILURE - failure = \(failure)")
             }
         }

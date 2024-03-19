@@ -28,6 +28,7 @@
 		7B4170CA2B9F9FDD00F0E43E /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4170C92B9F9FDD00F0E43E /* HomeViewModel.swift */; };
 		7B4170CD2B9FA80600F0E43E /* DiaryEntryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4170CC2B9FA80600F0E43E /* DiaryEntryItem.swift */; };
 		7B4171092BA0C5D700F0E43E /* DiaryEntryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4171082BA0C5D700F0E43E /* DiaryEntryRow.swift */; };
+		7B91D63C2BA9BF67007367E5 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91D63B2BA9BF67007367E5 /* CalendarViewModel.swift */; };
 		7BA4F3452B87D6670073A13B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7BA4F3442B87D6670073A13B /* FirebaseAuth */; };
 		7BA4F3482B87D6CE0073A13B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7BA4F3472B87D6CE0073A13B /* GoogleSignIn */; };
 		7BA4F34A2B87D6CE0073A13B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7BA4F3492B87D6CE0073A13B /* GoogleSignInSwift */; };
@@ -83,6 +84,7 @@
 		7B4170C92B9F9FDD00F0E43E /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		7B4170CC2B9FA80600F0E43E /* DiaryEntryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryEntryItem.swift; sourceTree = "<group>"; };
 		7B4171082BA0C5D700F0E43E /* DiaryEntryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryEntryRow.swift; sourceTree = "<group>"; };
+		7B91D63B2BA9BF67007367E5 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		7BA4F34B2B87D8760073A13B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BA4F34F2B87DDDF0073A13B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7BA4F3502B87DEA30073A13B /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
@@ -162,7 +164,6 @@
 				7B36D2082B84C366002A5C48 /* Assets.xcassets */,
 				7B36D20A2B84C366002A5C48 /* Preview Content */,
 				7BA4F35A2B8D04590073A13B /* Constants.swift */,
-				7B1CE1D52B9338F0007D5397 /* CalendarView.swift */,
 				7B1CE1D92B94DC51007D5397 /* Extensions.swift */,
 			);
 			path = Diary;
@@ -214,6 +215,7 @@
 		7B4170C52B9F98C000F0E43E /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				7B91D63A2BA9BF54007367E5 /* Calendar */,
 				7B33C1B72BA42E29002F0D94 /* DiaryEntryList */,
 				7B4170C82B9F9F2E00F0E43E /* Home */,
 				7B4170C72B9F98E100F0E43E /* Login */,
@@ -257,6 +259,15 @@
 				7B15871B2BA60E0800CDDD50 /* Persistence.swift */,
 			);
 			path = Persistence;
+			sourceTree = "<group>";
+		};
+		7B91D63A2BA9BF54007367E5 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				7B91D63B2BA9BF67007367E5 /* CalendarViewModel.swift */,
+				7B1CE1D52B9338F0007D5397 /* CalendarView.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -407,6 +418,7 @@
 				7B1CE1DA2B94DC51007D5397 /* Extensions.swift in Sources */,
 				7B1CE1D62B9338F1007D5397 /* CalendarView.swift in Sources */,
 				7B4171092BA0C5D700F0E43E /* DiaryEntryRow.swift in Sources */,
+				7B91D63C2BA9BF67007367E5 /* CalendarViewModel.swift in Sources */,
 				7B36D2072B84C365002A5C48 /* ContentView.swift in Sources */,
 				7B4170BD2B9F617600F0E43E /* Request.swift in Sources */,
 				7BA4F3592B88906C0073A13B /* HomeView.swift in Sources */,

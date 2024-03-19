@@ -11,6 +11,7 @@ struct DiaryEntryView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var viewModel: DiaryEntryViewModel
+    @EnvironmentObject private var calendarViewModel: CalendarViewModel
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
 
     var body: some View {
@@ -29,7 +30,9 @@ struct DiaryEntryView: View {
             Spacer()
 
             Button(action: {
-                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(), modelContext: modelContext)
+                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(),
+                                         modelContext: modelContext,
+                                         calendarViewModel: calendarViewModel)
             }, label: {
                 Text("Save")
                     .padding(EdgeInsets(top: 12, leading: 30, bottom: 12, trailing: 30))
@@ -42,7 +45,9 @@ struct DiaryEntryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: {
-                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(), modelContext: modelContext)
+                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(),
+                                             modelContext: modelContext,
+                                             calendarViewModel: calendarViewModel)
                     dismiss()
                 }, label: {
                     Image(systemName: "arrow.backward")

@@ -19,7 +19,7 @@ final class DiaryEntryViewModel: ObservableObject {
         self.networkEngine = networkEngine
     }
 
-    func saveDiaryEntry(userId: String?, modelContext: ModelContext) {
+    func saveDiaryEntry(userId: String?, modelContext: ModelContext, calendarViewModel: CalendarViewModel) {
         guard let id = userId else { return }
 
         guard !diaryEntryItem.title.isEmpty && !diaryEntryItem.story.isEmpty else {
@@ -27,6 +27,10 @@ final class DiaryEntryViewModel: ObservableObject {
         }
 
         modelContext.insert(diaryEntryItem)
+
+        /// If a new diary entry was created just now, the 'dot' should appear below that calendar date in `HomeView`
+        calendarViewModel.calendar.reloadData()
+
         let diaryEntry = DiaryEntry(title: diaryEntryItem.title,
                                     story: diaryEntryItem.story,
                                     diaryTimestamp: diaryEntryItem.diaryTimestamp,

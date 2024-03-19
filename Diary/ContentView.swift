@@ -9,11 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         if viewModel.isUserSignedIn {
             HomeView()
                 .environmentObject(HomeViewModel())
+                .environmentObject(CalendarViewModel(modelContext: modelContext))
         } else {
             LoginView()
         }

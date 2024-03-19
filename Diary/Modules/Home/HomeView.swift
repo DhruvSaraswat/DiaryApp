@@ -12,15 +12,16 @@ import SwiftData
 struct HomeView: View {
     @EnvironmentObject var viewModel: AuthenticationViewModel
     @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var calendarViewModel: CalendarViewModel
     @Environment(\.modelContext) private var modelContext
     @Query(Persistence.fetchDescriptor) private var items: [DiaryEntryItem]
-    @State private var selectedDate: Date = Date.now
     private let user = GIDSignIn.sharedInstance.currentUser
+    @State private var show2RecentEntries: Bool = false
 
     var body: some View {
         NavigationStack {
             VStack {
-                CalendarView(selectedDate: $selectedDate)
+                CalendarView(calendar: calendarViewModel.calendar, selectedDate: $calendarViewModel.selectedDate)
                     .frame(height: 400)
 
                 HStack(alignment: .lastTextBaseline) {
@@ -42,27 +43,29 @@ struct HomeView: View {
                 }
                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
 
-                List {
-                    ForEach(items.prefix(2)) { item in
-                        DiaryEntryRow(diaryEntryItem: item)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(
-                            RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
-                                .foregroundStyle(Constants.Colors.diaryRowBGColor)
-                                .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: -20))
-                        )
+                if show2RecentEntries {
+                    List {
+                        ForEach(items.prefix(2)) { item in
+                            DiaryEntryRow(diaryEntryItem: item)
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(
+                                    RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                                        .foregroundStyle(Constants.Colors.diaryRowBGColor)
+                                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: -20))
+                                )
+                        }
                     }
+                    .listStyle(.plain)
+                    .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
+                    .scrollDisabled(true)
                 }
-                .listStyle(.plain)
-                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
-                .scrollDisabled(true)
 
                 Spacer()
 
                 NavigationLink {
                     DiaryEntryView()
                         .environmentObject(
-                            createDiaryEntryViewModel(diaryEntryItem: fetchDiaryEntryItem(diaryDate: selectedDate.getDisplayDateForDiaryEntry()))
+                            createDiaryEntryViewModel(diaryEntryItem: fetchDiaryEntryItem(diaryDate: calendarViewModel.selectedDate.getDisplayDateForDiaryEntry()))
                             )
                 } label: {
                     Image(systemName: "plus.circle.fill")
@@ -73,15 +76,23 @@ struct HomeView: View {
             }
         }
         .onAppear(perform: {
-            homeViewModel.fetchAllDiaryEntries(userId: viewModel.getUserId(), context: modelContext)
+            homeViewModel.fetchAllDiaryEntries(userId: viewModel.getUserId(), context: modelContext) { isSuccessful in
+                if isSuccessful {
+                    show2RecentEntries = true
+                }
+                DispatchQueue.main.async {
+                    calendarViewModel.calendar.reloadData()
+                }
+            }
         })
+        .toolbar(.visible, for: .navigationBar)
     }
 
     private func createDiaryEntryViewModel(diaryEntryItem: DiaryEntryItem?) -> DiaryEntryViewModel {
         if let item = diaryEntryItem {
             return DiaryEntryViewModel(diaryEntryItem: item)
         }
-        let diaryTimestamp: Int64 = Int64(selectedDate.timeIntervalSince1970)
+        let diaryTimestamp: Int64 = Int64(calendarViewModel.selectedDate.timeIntervalSince1970)
         let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
 
         let newDiaryEntry = DiaryEntryItem(title: "",
