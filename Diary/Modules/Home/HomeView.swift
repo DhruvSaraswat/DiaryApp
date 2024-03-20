@@ -77,9 +77,7 @@ struct HomeView: View {
         }
         .onAppear(perform: {
             homeViewModel.fetchAllDiaryEntries(userId: viewModel.getUserId(), context: modelContext) { isSuccessful in
-                if isSuccessful {
-                    show2RecentEntries = true
-                }
+                show2RecentEntries = true
                 DispatchQueue.main.async {
                     calendarViewModel.calendar.reloadData()
                 }
