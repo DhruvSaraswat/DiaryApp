@@ -8,6 +8,7 @@
 import Firebase
 import GoogleSignIn
 import SwiftUI
+import SwiftData
 
 final class AuthenticationViewModel: ObservableObject {
     @Published var username: String = ""
@@ -85,7 +86,7 @@ final class AuthenticationViewModel: ObservableObject {
         }
     }
 
-    func signOut() {
+    func signOut(_ modelContext: ModelContext) {
         GIDSignIn.sharedInstance.signOut()
 
         do {
@@ -93,6 +94,12 @@ final class AuthenticationViewModel: ObservableObject {
             self.userId = ""
         } catch {
             debugPrint("ERROR WHILE SIGNING OUT - \(error.localizedDescription)")
+        }
+
+        do {
+            try modelContext.delete(model: DiaryEntryItem.self)
+        } catch {
+            debugPrint("FAILED TO DELETE DiaryEntryItem instances - \(error.localizedDescription)")
         }
     }
 

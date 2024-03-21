@@ -20,7 +20,7 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: -10) {
                 CalendarView(calendar: calendarViewModel.calendar, selectedDate: $calendarViewModel.selectedDate)
                     .frame(height: 400)
 
@@ -67,6 +67,25 @@ struct HomeView: View {
                         .tint(Color.brown)
                 }
             }
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        viewModel.signOut(modelContext)
+                    }, label: {
+                        Text("Sign Out")
+                            .font(.callout)
+                            .foregroundStyle(Constants.Colors.backArrowTint)
+                    })
+                }
+
+                ToolbarItem(placement: .principal) {
+                    Text("Diary")
+                        .foregroundStyle(Constants.Colors.backArrowTint)
+                }
+            }
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear(perform: {
             homeViewModel.fetchAllDiaryEntries(userId: viewModel.getUserId(), context: modelContext) { isSuccessful in
@@ -76,7 +95,6 @@ struct HomeView: View {
                 }
             }
         })
-        .toolbar(.visible, for: .navigationBar)
     }
 
     private func createDiaryEntryViewModel(diaryEntryItem: DiaryEntryItem?) -> DiaryEntryViewModel {
