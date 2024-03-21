@@ -10,7 +10,7 @@ import GoogleSignIn
 import SwiftData
 
 struct HomeView: View {
-    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @EnvironmentObject var authViewModel: AuthenticationViewModel
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var calendarViewModel: CalendarViewModel
     @Environment(\.modelContext) private var modelContext
@@ -48,6 +48,7 @@ struct HomeView: View {
                         ForEach(items.prefix(2)) { item in
                             DiaryEntryRow(diaryEntryItem: item)
                         }
+                        .onDelete(perform: deleteDiaryItems)
                     }
                     .listStyle(.plain)
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
@@ -71,7 +72,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
-                        viewModel.signOut(modelContext)
+                        authViewModel.signOut(modelContext)
                     }, label: {
                         Text("Sign Out")
                             .font(.callout)
@@ -88,8 +89,9 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear(perform: {
-            homeViewModel.fetchAllDiaryEntries(userId: viewModel.getUserId(), context: modelContext) { isSuccessful in
+            homeViewModel.fetchAllDiaryEntries(userId: authViewModel.getUserId(), context: modelContext) { isSuccessful in
                 show2RecentEntries = true
+                /// show the dot below all the calendar dates for which a diary entry exists
                 DispatchQueue.main.async {
                     calendarViewModel.calendar.reloadData()
                 }
@@ -116,6 +118,19 @@ struct HomeView: View {
     private func fetchDiaryEntryItem(diaryDate: String) -> DiaryEntryItem? {
         let descriptor = Persistence.getFetchDescriptor(byDiaryDate: diaryDate)
         return try? modelContext.fetch(descriptor).first
+    }
+
+    func deleteDiaryItems(at offsets: IndexSet) {
+        withAnimation {
+            for index in offsets {
+                modelContext.delete(items[index])
+                homeViewModel.deleteDiaryEntry(userId: authViewModel.getUserId(), diaryTimestamp: items[index].diaryTimestamp, completion: nil)
+            }
+            /// hide the dot below all the calendar dates for which a diary entry has been deleted
+            DispatchQueue.main.async {
+                calendarViewModel.calendar.reloadData()
+            }
+        }
     }
 }
 

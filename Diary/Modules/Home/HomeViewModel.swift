@@ -16,9 +16,12 @@ final class HomeViewModel: ObservableObject {
     }
 
     func fetchAllDiaryEntries(userId: String, context: ModelContext, completion: ((_ isSuccessful: Bool) -> Void)?) {
-        guard !userId.isEmpty else { return }
+        guard !userId.isEmpty else {
+            completion?(false)
+            return
+        }
 
-        self.networkEngine.request(request: Request.fetchAllEntries(userId: userId)) { (result: Result<[DiaryEntry]?, APIError>) in
+        networkEngine.request(request: Request.fetchAllEntries(userId: userId)) { (result: Result<[DiaryEntry]?, APIError>) in
             switch result {
             case .success(let diaryEntries):
                 print("SUCCESS - diaryEntries = \(String(describing: diaryEntries))")
@@ -40,6 +43,16 @@ final class HomeViewModel: ObservableObject {
                 completion?(false)
                 print("FAILURE - failure = \(failure)")
             }
+        }
+    }
+
+    func deleteDiaryEntry(userId: String, diaryTimestamp: Int64, completion: ((_ isSuccessful: Bool) -> Void)?) {
+        guard !userId.isEmpty else {
+            completion?(false)
+            return
+        }
+
+        networkEngine.request(request: Request.deleteEntry(userId: userId, diaryTimestamp: diaryTimestamp)) { (result: Result<[DiaryEntry]?, APIError>) in
         }
     }
 }
