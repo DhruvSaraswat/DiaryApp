@@ -29,5 +29,11 @@ struct DiaryEntryRow: View {
             }
             .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
         }
+        .listRowSeparator(.hidden)
+        .listRowBackground(
+            RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                .foregroundStyle(Color(UIColor(red: 242 / 255, green: 231 / 255, blue: 225 / 255, alpha: 1)))
+                .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 40))
+        )
     }
 }

@@ -47,12 +47,6 @@ struct HomeView: View {
                     List {
                         ForEach(items.prefix(2)) { item in
                             DiaryEntryRow(diaryEntryItem: item)
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(
-                                    RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
-                                        .foregroundStyle(Constants.Colors.diaryRowBGColor)
-                                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 40))
-                                )
                         }
                     }
                     .listStyle(.plain)
