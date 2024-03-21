@@ -51,7 +51,7 @@ struct HomeView: View {
                                 .listRowBackground(
                                     RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
                                         .foregroundStyle(Constants.Colors.diaryRowBGColor)
-                                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: -20))
+                                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 40))
                                 )
                         }
                     }

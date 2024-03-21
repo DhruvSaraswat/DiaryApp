@@ -17,7 +17,9 @@ struct DiaryEntryListView: View {
     var body: some View {
         VStack {
             Text("All Diary Entries")
-                .font(.title2)
+                .font(.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(EdgeInsets(top: 0, leading: 35, bottom: 0, trailing: 0))
 
             List {
                 ForEach(items) { item in
@@ -26,7 +28,7 @@ struct DiaryEntryListView: View {
                     .listRowBackground(
                         RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
                             .foregroundStyle(Color(UIColor(red: 242 / 255, green: 231 / 255, blue: 225 / 255, alpha: 1)))
-                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: -20))
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 40))
                     )
                 }
             }
