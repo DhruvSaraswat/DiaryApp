@@ -1,11 +1,10 @@
 //
-//  DiaryEntryItem.swift
+//  ItemV1.swift
 //  Diary
 //
-//  Created by Dhruv Saraswat on 12/03/24.
+//  Created by Dhruv Saraswat on 30/03/24.
 //
 
-import Foundation
 import SwiftData
 
 @Model

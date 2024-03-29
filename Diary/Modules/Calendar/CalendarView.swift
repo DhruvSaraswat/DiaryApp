@@ -13,7 +13,6 @@ struct CalendarView: UIViewRepresentable {
     typealias UIViewType = FSCalendar
     var calendar: FSCalendar
     @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.modelContext) var modelContext
     @Binding var selectedDate: Date
 
     func makeUIView(context: Context) -> FSCalendar {

@@ -12,6 +12,7 @@ import SwiftData
 @main
 struct DiaryApp: App {
     @StateObject var viewModel = AuthenticationViewModel()
+    private let dataProvider = CachedDataProvider.shared
 
     init() {
         setupAuthentication()
@@ -20,10 +21,11 @@ struct DiaryApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.createCachedDataHandler, dataProvider.createCachedDataHandler())
                 .environmentObject(viewModel)
                 .onAppear(perform: UIApplication.shared.addTapGestureRecognizer)
         }
-        .modelContainer(for: DiaryEntryItem.self)
+        .modelContainer(dataProvider.sharedModelContainer)
     }
 }
 

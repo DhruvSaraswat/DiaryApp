@@ -30,9 +30,7 @@ struct DiaryEntryView: View {
             Spacer()
 
             Button(action: {
-                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(),
-                                         modelContext: modelContext,
-                                         calendarViewModel: calendarViewModel)
+                saveDiaryEntry()
             }, label: {
                 Text("Save")
                     .padding(EdgeInsets(top: 12, leading: 30, bottom: 12, trailing: 30))
@@ -45,9 +43,7 @@ struct DiaryEntryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: {
-                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(),
-                                             modelContext: modelContext,
-                                             calendarViewModel: calendarViewModel)
+                    saveDiaryEntry()
                     dismiss()
                 }, label: {
                     Image(systemName: "arrow.backward")
@@ -58,6 +54,25 @@ struct DiaryEntryView: View {
             ToolbarItem(placement: .principal) {
                 Text("\(viewModel.diaryEntryItem.diaryTimestamp.getTitleDisplayDate())")
                     .foregroundStyle(Constants.Colors.backArrowTint)
+            }
+        }
+    }
+
+    private func saveDiaryEntry() {
+        Task {
+            await viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId())
+        }
+        let cache = CachedDataHandler(modelContainer: modelContext.container)
+        Task {
+            do {
+                try await cache.persist(diaryEntries: [viewModel.diaryEntryItem])
+
+                DispatchQueue.main.async {
+                    /// If a new diary entry was created just now, the 'dot' should appear below that calendar date in `HomeView`
+                    calendarViewModel.calendar.reloadData()
+                }
+            } catch {
+                debugPrint("ERROR OCCURRED WHILE SAVING DIARY ENTRY - \(error)")
             }
         }
     }

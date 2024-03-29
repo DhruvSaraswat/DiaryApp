@@ -15,44 +15,42 @@ final class HomeViewModel: ObservableObject {
         self.networkEngine = networkEngine
     }
 
-    func fetchAllDiaryEntries(userId: String, context: ModelContext, completion: ((_ isSuccessful: Bool) -> Void)?) {
+    func fetchAllDiaryEntries(userId: String) async -> (isSuccessful: Bool, items: [DiaryEntryItem]) {
         guard !userId.isEmpty else {
-            completion?(false)
-            return
+            return (false, [])
         }
 
-        networkEngine.request(request: Request.fetchAllEntries(userId: userId)) { (result: Result<[DiaryEntry]?, APIError>) in
-            switch result {
-            case .success(let diaryEntries):
-                print("SUCCESS - diaryEntries = \(String(describing: diaryEntries))")
-                for diaryEntry in diaryEntries ?? [] {
-                    let diaryTimestamp: Int64 = diaryEntry.diaryTimestamp ?? Int64(Date.now.timeIntervalSince1970)
-                    let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
-                    
-                    let diaryEntryItem = DiaryEntryItem(title: diaryEntry.title ?? "",
-                                                        story: diaryEntry.story ?? "",
-                                                        diaryTimestamp: diaryTimestamp,
-                                                        diaryDate: diaryDate,
-                                                        createdAtTimestamp: diaryEntry.createdAtTimestamp ?? Int64(Date.now.timeIntervalSince1970),
-                                                        lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp ?? Int64(Date.now.timeIntervalSince1970))
-                    context.insert(diaryEntryItem)
-                }
-                completion?(true)
+        let apiResult: Result<[DiaryEntry]?, APIError> = await networkEngine.request(request: Request.fetchAllEntries(userId: userId))
 
-            case .failure(let failure):
-                completion?(false)
-                print("FAILURE - failure = \(failure)")
+        switch apiResult {
+        case .success(let diaryEntries):
+            print("SUCCESS - diaryEntries = \(String(describing: diaryEntries))")
+            var items: [DiaryEntryItem] = []
+            for diaryEntry in diaryEntries ?? [] {
+                let diaryTimestamp: Int64 = diaryEntry.diaryTimestamp ?? Int64(Date.now.timeIntervalSince1970)
+                let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
+
+                let diaryEntryItem = DiaryEntryItem(title: diaryEntry.title ?? "",
+                                                    story: diaryEntry.story ?? "",
+                                                    diaryTimestamp: diaryTimestamp,
+                                                    diaryDate: diaryDate,
+                                                    createdAtTimestamp: diaryEntry.createdAtTimestamp ?? Int64(Date.now.timeIntervalSince1970),
+                                                    lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp ?? Int64(Date.now.timeIntervalSince1970))
+                items.append(diaryEntryItem)
             }
+            return (true, items)
+
+        case .failure(let failure):
+            print("FAILURE - failure = \(failure)")
+            return (false, [])
         }
     }
 
-    func deleteDiaryEntry(userId: String, diaryTimestamp: Int64, completion: ((_ isSuccessful: Bool) -> Void)?) {
+    func deleteDiaryEntry(userId: String, diaryTimestamp: Int64) async {
         guard !userId.isEmpty else {
-            completion?(false)
             return
         }
 
-        networkEngine.request(request: Request.deleteEntry(userId: userId, diaryTimestamp: diaryTimestamp)) { (result: Result<[DiaryEntry]?, APIError>) in
-        }
+        let _: Result<[DiaryEntry]?, APIError> = await networkEngine.request(request: Request.deleteEntry(userId: userId, diaryTimestamp: diaryTimestamp))
     }
 }

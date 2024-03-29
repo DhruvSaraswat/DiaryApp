@@ -18,4 +18,24 @@ struct Constants {
         static let dateTextColor = Color(UIColor(red: 194 / 255, green: 181 / 255, blue:  168 / 255, alpha: 1))
         static let diaryRowBGColor = Color(UIColor(red: 242 / 255, green: 231 / 255, blue: 225 / 255, alpha: 1))
     }
+
+    enum FetchDescriptors {
+        case fetchAllDiaryEntries
+        case fetchByDiaryDate(diaryDate: String)
+
+        var descriptor: FetchDescriptor<DiaryEntryItem> {
+            switch self {
+            case .fetchAllDiaryEntries:
+                let descriptor = FetchDescriptor<DiaryEntryItem>(
+                    sortBy: [.init(\.diaryTimestamp, order: .reverse)]
+                )
+                return descriptor
+
+            case .fetchByDiaryDate(let diaryDate):
+                var descriptor = FetchDescriptor<DiaryEntryItem>(predicate: #Predicate { $0.diaryDate == diaryDate })
+                descriptor.fetchLimit = 1
+                return descriptor
+            }
+        }
+    }
 }

@@ -14,7 +14,8 @@ struct HomeView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var calendarViewModel: CalendarViewModel
     @Environment(\.modelContext) private var modelContext
-    @Query(Persistence.fetchDescriptor) private var items: [DiaryEntryItem]
+    @Environment(\.createCachedDataHandler) private var createDataHandler
+    @Query(Constants.FetchDescriptors.fetchAllDiaryEntries.descriptor, animation: .smooth) private var items: [DiaryEntryItem]
     private let user = GIDSignIn.sharedInstance.currentUser
     @State private var show2RecentEntries: Bool = false
 
@@ -33,7 +34,7 @@ struct HomeView: View {
                     Spacer()
 
                     NavigationLink {
-                        DiaryEntryListView()
+                        DiaryEntryListView(onDeleteHandler: deleteDiaryItems)
                     } label: {
                         Text("See All")
                             .font(.callout)
@@ -72,7 +73,16 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
-                        authViewModel.signOut(modelContext)
+                        authViewModel.signOut()
+                        Task { @MainActor in
+                            if let dataHandler = await createDataHandler() {
+                                do {
+                                    try await dataHandler.deleteAllItems()
+                                } catch {
+                                    debugPrint("ERROR OCCURRED WHILE DELETING ALL DIARY ENTRIES - \(error)")
+                                }
+                            }
+                        }
                     }, label: {
                         Text("Sign Out")
                             .font(.callout)
@@ -88,15 +98,21 @@ struct HomeView: View {
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .onAppear(perform: {
-            homeViewModel.fetchAllDiaryEntries(userId: authViewModel.getUserId(), context: modelContext) { isSuccessful in
-                show2RecentEntries = true
-                /// show the dot below all the calendar dates for which a diary entry exists
-                DispatchQueue.main.async {
-                    calendarViewModel.calendar.reloadData()
+        .task(priority: .high) { @MainActor in
+            let tuple = await homeViewModel.fetchAllDiaryEntries(userId: authViewModel.getUserId())
+            do {
+                if let dataHandler = await createDataHandler() {
+                    try await dataHandler.persist(diaryEntries: tuple.items)
+                    show2RecentEntries = true
+                    /// show the dot below all the calendar dates for which a diary entry exists
+                    DispatchQueue.main.async {
+                        calendarViewModel.calendar.reloadData()
+                    }
                 }
+            } catch {
+                debugPrint("ERROR OCCURRED WHILE SAVING DIARY ENTRIES - \(error)")
             }
-        })
+        }
     }
 
     private func createDiaryEntryViewModel(diaryEntryItem: DiaryEntryItem?) -> DiaryEntryViewModel {
@@ -116,19 +132,28 @@ struct HomeView: View {
     }
 
     private func fetchDiaryEntryItem(diaryDate: String) -> DiaryEntryItem? {
-        let descriptor = Persistence.getFetchDescriptor(byDiaryDate: diaryDate)
+        let descriptor = Constants.FetchDescriptors.fetchByDiaryDate(diaryDate: diaryDate).descriptor
         return try? modelContext.fetch(descriptor).first
     }
 
+    @MainActor
     func deleteDiaryItems(at offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-                homeViewModel.deleteDiaryEntry(userId: authViewModel.getUserId(), diaryTimestamp: items[index].diaryTimestamp, completion: nil)
-            }
-            /// hide the dot below all the calendar dates for which a diary entry has been deleted
-            DispatchQueue.main.async {
-                calendarViewModel.calendar.reloadData()
+        Task { @MainActor in
+            if let dataHandler = await createDataHandler() {
+                for index in offsets {
+                    guard let diaryEntryToBeDeleted = items[safe: index] else { continue }
+                    do {
+                        try await dataHandler.delete(diaryEntry: diaryEntryToBeDeleted)
+                    } catch {
+                        debugPrint("ERROR OCCURRED WHILE DELETING DIARY ENTRY - \(error)")
+                    }
+                    await homeViewModel.deleteDiaryEntry(userId: authViewModel.getUserId(), diaryTimestamp: diaryEntryToBeDeleted.diaryTimestamp)
+
+                    /// hide the dot below all the calendar dates for which a diary entry has been deleted
+                    DispatchQueue.main.async {
+                        calendarViewModel.calendar.reloadData()
+                    }
+                }
             }
         }
     }

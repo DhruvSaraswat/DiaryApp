@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkEngine {
-    func request<T: Codable>(request: APIRequest, completion: ((Result<T?, APIError>) -> Void)?)
+    func request<T: Codable>(request: APIRequest) async -> (Result<T?, APIError>)
 }
 
 struct NetworkEngineImpl: NetworkEngine {
@@ -19,35 +19,31 @@ struct NetworkEngineImpl: NetworkEngine {
         self.urlSession = urlSession
     }
 
-    func request<T: Codable>(request: APIRequest, completion: ((Result<T?, APIError>) -> Void)?) {
+    func request<T: Codable>(request: APIRequest) async -> (Result<T?, APIError>) {
         guard let urlRequest = buildURLRequest(from: request) else {
-            completion?(.failure(.requestCreationFailed))
-            return
+            return .failure(.requestCreationFailed)
         }
 
-        let dataTask = urlSession.dataTask(with: urlRequest) { data, urlResponse, error in
-            guard error == nil else {
-                completion?(.failure(.serverError(error: error!)))
-                return
-            }
+        var apiResponse: (data: Data, urlResponse: URLResponse)
 
-            if let httpResponse = urlResponse as? HTTPURLResponse, !successStatusCodeRange.contains(httpResponse.statusCode) {
-                completion?(.failure(.serverError(statusCode: httpResponse.statusCode)))
-                return
-            }
-
-            guard let responseData = data, !responseData.isEmpty else {
-                completion?(.success(nil))
-                return
-            }
-
-            if let responseObject = try? JSONDecoder().decode(T.self, from: responseData) {
-                completion?(.success(responseObject))
-            } else {
-                completion?(.failure(.unableToParseResponse(data: responseData)))
-            }
+        do {
+            apiResponse = try await urlSession.data(for: urlRequest)
+        } catch {
+            return .failure(.serverError(error: error))
         }
-        dataTask.resume()
+
+        if let httpResponse = apiResponse.urlResponse as? HTTPURLResponse, !successStatusCodeRange.contains(httpResponse.statusCode) {
+            return .failure(.serverError(statusCode: httpResponse.statusCode))
+        }
+
+        guard !apiResponse.data.isEmpty else {
+            return .success(nil)
+        }
+
+        if let responseObject = try? JSONDecoder().decode(T.self, from: apiResponse.data) {
+            return .success(responseObject)
+        }
+        return .failure(.unableToParseResponse(data: apiResponse.data))
     }
 
     func buildURLRequest(from apiRequest: APIRequest) -> URLRequest? {

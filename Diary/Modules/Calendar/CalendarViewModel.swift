@@ -31,7 +31,7 @@ extension CalendarViewModel: FSCalendarDelegate {
 extension CalendarViewModel: FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
         let diaryDate = date.getDisplayDateForDiaryEntry()
-        let descriptor = Persistence.getFetchDescriptor(byDiaryDate: diaryDate)
+        let descriptor = Constants.FetchDescriptors.fetchByDiaryDate(diaryDate: diaryDate).descriptor
         do {
             return try modelContext.fetchCount(descriptor)
         } catch {
