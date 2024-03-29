@@ -9,15 +9,15 @@ import SwiftData
 import SwiftUI
 
 struct Persistence {
-    static var fetchDescriptor: FetchDescriptor<DiaryEntryItem> = {
-        let descriptor = FetchDescriptor<DiaryEntryItem>(
+    static var fetchDescriptor: FetchDescriptor<Item> = {
+        let descriptor = FetchDescriptor<Item>(
             sortBy: [.init(\.diaryTimestamp, order: .reverse)]
         )
         return descriptor
     }()
 
-    static func getFetchDescriptor(byDiaryDate diaryDate: String) -> FetchDescriptor<DiaryEntryItem> {
-        var descriptor = FetchDescriptor<DiaryEntryItem>(predicate: #Predicate { $0.diaryDate == diaryDate })
+    static func getFetchDescriptor(byDiaryDate diaryDate: String) -> FetchDescriptor<Item> {
+        var descriptor = FetchDescriptor<Item>(predicate: #Predicate { $0.diaryDate == diaryDate })
         descriptor.fetchLimit = 1
         return descriptor
     }

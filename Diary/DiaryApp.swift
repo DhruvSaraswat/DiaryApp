@@ -12,6 +12,7 @@ import SwiftData
 @main
 struct DiaryApp: App {
     @StateObject var viewModel = AuthenticationViewModel()
+    private let dataProvider = PersistentDataProvider.shared
 
     init() {
         setupAuthentication()
@@ -21,9 +22,10 @@ struct DiaryApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(viewModel)
+                .environment(\.createDataHandlerWithMainContext, dataProvider.createHandlerWithMainContext())
                 .onAppear(perform: UIApplication.shared.addTapGestureRecognizer)
         }
-        .modelContainer(for: DiaryEntryItem.self)
+        .modelContainer(dataProvider.sharedModelContainer)
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DiaryEntryView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.createDataHandler) private var createDataHandler
     @EnvironmentObject private var viewModel: DiaryEntryViewModel
     @EnvironmentObject private var calendarViewModel: CalendarViewModel
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
@@ -30,9 +30,9 @@ struct DiaryEntryView: View {
             Spacer()
 
             Button(action: {
-                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(),
-                                         modelContext: modelContext,
-                                         calendarViewModel: calendarViewModel)
+                viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(), calendarViewModel: calendarViewModel)
+
+                saveDiaryEntriesToLocalStorage(items: [viewModel.diaryEntryItem])
             }, label: {
                 Text("Save")
                     .padding(EdgeInsets(top: 12, leading: 30, bottom: 12, trailing: 30))
@@ -45,9 +45,8 @@ struct DiaryEntryView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: {
-                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(),
-                                             modelContext: modelContext,
-                                             calendarViewModel: calendarViewModel)
+                    viewModel.saveDiaryEntry(userId: authenticationViewModel.getUserId(), calendarViewModel: calendarViewModel)
+                    saveDiaryEntriesToLocalStorage(items: [viewModel.diaryEntryItem])
                     dismiss()
                 }, label: {
                     Image(systemName: "arrow.backward")
@@ -58,6 +57,24 @@ struct DiaryEntryView: View {
             ToolbarItem(placement: .principal) {
                 Text("\(viewModel.diaryEntryItem.diaryTimestamp.getTitleDisplayDate())")
                     .foregroundStyle(Constants.Colors.backArrowTint)
+            }
+        }
+    }
+
+    private func saveDiaryEntriesToLocalStorage(items: [Item]) {
+        debugPrint("INSIDE saveDiaryEntriesToLocalStorage")
+        let createDataHandler = createDataHandler
+        Task.detached {
+            if let dataHandler = await createDataHandler() {
+                for item in items {
+                    try await dataHandler.upsert(item: item)
+                }
+
+                /// show the dot below all the calendar dates for which a diary entry exists
+                DispatchQueue.main.async {
+                    debugPrint("RELOADING CALENDAR")
+                    calendarViewModel.calendar.reloadData()
+                }
             }
         }
     }

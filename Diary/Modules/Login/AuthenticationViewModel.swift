@@ -86,7 +86,7 @@ final class AuthenticationViewModel: ObservableObject {
         }
     }
 
-    func signOut(_ modelContext: ModelContext) {
+    func signOut() {
         GIDSignIn.sharedInstance.signOut()
 
         do {
@@ -94,12 +94,6 @@ final class AuthenticationViewModel: ObservableObject {
             self.userId = ""
         } catch {
             debugPrint("ERROR WHILE SIGNING OUT - \(error.localizedDescription)")
-        }
-
-        do {
-            try modelContext.delete(model: DiaryEntryItem.self)
-        } catch {
-            debugPrint("FAILED TO DELETE DiaryEntryItem instances - \(error.localizedDescription)")
         }
     }
 

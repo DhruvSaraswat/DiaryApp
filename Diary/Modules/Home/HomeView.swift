@@ -14,7 +14,9 @@ struct HomeView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var calendarViewModel: CalendarViewModel
     @Environment(\.modelContext) private var modelContext
-    @Query(Persistence.fetchDescriptor) private var items: [DiaryEntryItem]
+    @Query(Persistence.fetchDescriptor, animation: .smooth) private var items: [Item]
+    @Environment(\.createDataHandler) private var createDataHandler
+    @Environment(\.createDataHandlerWithMainContext) private var createDataHandlerWithMainContext
     private let user = GIDSignIn.sharedInstance.currentUser
     @State private var show2RecentEntries: Bool = false
 
@@ -33,7 +35,7 @@ struct HomeView: View {
                     Spacer()
 
                     NavigationLink {
-                        DiaryEntryListView()
+                        DiaryEntryListView(onDeleteHandler: deleteDiaryItems)
                     } label: {
                         Text("See All")
                             .font(.callout)
@@ -72,7 +74,13 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
-                        authViewModel.signOut(modelContext)
+                        authViewModel.signOut()
+                        let createDataHandler = createDataHandler
+                        Task {
+                            if let dataHandler = await createDataHandler() {
+                                try? await dataHandler.deleteAllItems()
+                            }
+                        }
                     }, label: {
                         Text("Sign Out")
                             .font(.callout)
@@ -89,46 +97,81 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear(perform: {
-            homeViewModel.fetchAllDiaryEntries(userId: authViewModel.getUserId(), context: modelContext) { isSuccessful in
+            homeViewModel.fetchAllDiaryEntries(userId: authViewModel.getUserId()) { isSuccessful, items in
                 show2RecentEntries = true
-                /// show the dot below all the calendar dates for which a diary entry exists
-                DispatchQueue.main.async {
-                    calendarViewModel.calendar.reloadData()
-                }
+
+                saveDiaryEntriesToLocalStorage(items: items)
             }
         })
     }
 
-    private func createDiaryEntryViewModel(diaryEntryItem: DiaryEntryItem?) -> DiaryEntryViewModel {
+    private func createDiaryEntryViewModel(diaryEntryItem: Item?) -> DiaryEntryViewModel {
         if let item = diaryEntryItem {
             return DiaryEntryViewModel(diaryEntryItem: item)
         }
         let diaryTimestamp: Int64 = Int64(calendarViewModel.selectedDate.timeIntervalSince1970)
         let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
 
-        let newDiaryEntry = DiaryEntryItem(title: "",
-                                           story: "",
-                                           diaryTimestamp: diaryTimestamp,
-                                           diaryDate: diaryDate,
-                                           createdAtTimestamp: Int64(Date.now.timeIntervalSince1970),
-                                           lastEditedAtTimestamp: Int64(Date.now.timeIntervalSince1970))
+        let newDiaryEntry = Item(title: "",
+                                 story: "",
+                                 diaryTimestamp: diaryTimestamp,
+                                 diaryDate: diaryDate,
+                                 createdAtTimestamp: Int64(Date.now.timeIntervalSince1970),
+                                 lastEditedAtTimestamp: Int64(Date.now.timeIntervalSince1970))
         return DiaryEntryViewModel(diaryEntryItem: newDiaryEntry)
     }
 
-    private func fetchDiaryEntryItem(diaryDate: String) -> DiaryEntryItem? {
+    private func fetchDiaryEntryItem(diaryDate: String) -> Item? {
         let descriptor = Persistence.getFetchDescriptor(byDiaryDate: diaryDate)
         return try? modelContext.fetch(descriptor).first
     }
 
     func deleteDiaryItems(at offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-                homeViewModel.deleteDiaryEntry(userId: authViewModel.getUserId(), diaryTimestamp: items[index].diaryTimestamp, completion: nil)
-            }
+        for index in offsets {
+            homeViewModel.deleteDiaryEntry(userId: authViewModel.getUserId(), diaryTimestamp: items[index].diaryTimestamp, completion: nil)
+        }
+        Task {
+            await deleteDiaryItemsFronLocalStorage(at: offsets)
             /// hide the dot below all the calendar dates for which a diary entry has been deleted
             DispatchQueue.main.async {
                 calendarViewModel.calendar.reloadData()
+            }
+        }
+    }
+
+    @MainActor
+    private func saveDiaryEntriesToLocalStorage(items: [Item]) {
+        debugPrint("INSIDE saveDiaryEntriesToLocalStorage")
+        let createDataHandler = createDataHandler
+        Task { @MainActor in
+            if let dataHandler = await createDataHandlerWithMainContext() {
+                for item in items {
+                    do {
+                        try await dataHandler.upsert(item: item)
+                    } catch {
+                        debugPrint("ERROR UPSERTING ITEM - title = \(item.title), story = \(item.story), error = \(error)")
+                    }
+                }
+
+                /// show the dot below all the calendar dates for which a diary entry exists
+                DispatchQueue.main.async {
+                    debugPrint("RELOADING CALENDAR")
+                    calendarViewModel.calendar.reloadData()
+                }
+            }
+        }
+    }
+
+    func deleteDiaryItemsFronLocalStorage(at offsets: IndexSet) async {
+        let createDataHandler = createDataHandler
+
+        if let dataHandler = await createDataHandler() {
+            await withThrowingTaskGroup(of: Void.self) { taskGroup in
+                for index in offsets {
+                    taskGroup.addTask {
+                        try? await dataHandler.deleteItem(id: items[index].id)
+                    }
+                }
             }
         }
     }

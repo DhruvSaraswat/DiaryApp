@@ -15,32 +15,35 @@ final class HomeViewModel: ObservableObject {
         self.networkEngine = networkEngine
     }
 
-    func fetchAllDiaryEntries(userId: String, context: ModelContext, completion: ((_ isSuccessful: Bool) -> Void)?) {
+    func fetchAllDiaryEntries(userId: String, completion: ((_ isSuccessful: Bool, _ items: [Item]) -> Void)?) {
         guard !userId.isEmpty else {
-            completion?(false)
+            completion?(false, [])
             return
         }
 
-        networkEngine.request(request: Request.fetchAllEntries(userId: userId)) { (result: Result<[DiaryEntry]?, APIError>) in
-            switch result {
+        Task {
+            let apiResult: Result<[DiaryEntry]?, APIError> = await networkEngine.request(request: Request.fetchAllEntries(userId: userId))
+
+            switch apiResult {
             case .success(let diaryEntries):
                 print("SUCCESS - diaryEntries = \(String(describing: diaryEntries))")
+                var items: [Item] = []
                 for diaryEntry in diaryEntries ?? [] {
                     let diaryTimestamp: Int64 = diaryEntry.diaryTimestamp ?? Int64(Date.now.timeIntervalSince1970)
                     let diaryDate = diaryTimestamp.getDisplayDateForDiaryEntry()
-                    
-                    let diaryEntryItem = DiaryEntryItem(title: diaryEntry.title ?? "",
-                                                        story: diaryEntry.story ?? "",
-                                                        diaryTimestamp: diaryTimestamp,
-                                                        diaryDate: diaryDate,
-                                                        createdAtTimestamp: diaryEntry.createdAtTimestamp ?? Int64(Date.now.timeIntervalSince1970),
-                                                        lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp ?? Int64(Date.now.timeIntervalSince1970))
-                    context.insert(diaryEntryItem)
+
+                    let diaryEntryItem = Item(title: diaryEntry.title ?? "",
+                                              story: diaryEntry.story ?? "",
+                                              diaryTimestamp: diaryTimestamp,
+                                              diaryDate: diaryDate,
+                                              createdAtTimestamp: diaryEntry.createdAtTimestamp ?? Int64(Date.now.timeIntervalSince1970),
+                                              lastEditedAtTimestamp: diaryEntry.lastEditedAtTimestamp ?? Int64(Date.now.timeIntervalSince1970))
+                    items.append(diaryEntryItem)
                 }
-                completion?(true)
+                completion?(true, items)
 
             case .failure(let failure):
-                completion?(false)
+                completion?(false, [])
                 print("FAILURE - failure = \(failure)")
             }
         }
@@ -52,7 +55,8 @@ final class HomeViewModel: ObservableObject {
             return
         }
 
-        networkEngine.request(request: Request.deleteEntry(userId: userId, diaryTimestamp: diaryTimestamp)) { (result: Result<[DiaryEntry]?, APIError>) in
+        Task {
+            let _: Result<[DiaryEntry]?, APIError> = await networkEngine.request(request: Request.deleteEntry(userId: userId, diaryTimestamp: diaryTimestamp))
         }
     }
 }

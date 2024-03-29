@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 struct DiaryEntryRow: View {
-    private var diaryEntryItem: DiaryEntryItem
+    private var diaryEntryItem: Item
 
-    init(diaryEntryItem: DiaryEntryItem) {
+    init(diaryEntryItem: Item) {
         self.diaryEntryItem = diaryEntryItem
     }
 
