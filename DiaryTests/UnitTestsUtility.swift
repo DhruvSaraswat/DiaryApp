@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@testable import Diary
 
 enum RandomStringDomain {
     /// contains English alphabets (uppercase and lowercase) and digits 0 through 9.
@@ -44,5 +45,14 @@ class UnitTestsUtility {
             randomString += NSString(characters: &nextChar, length: 1) as String
         }
         return randomString
+    }
+
+    static func generateRandomDiaryEntryItem() -> DiaryEntryItem {
+        DiaryEntryItem(title: generateRandomString(domain: .alphanumeric, ofLength: 10),
+                       story: generateRandomString(domain: .alphanumeric, ofLength: 10),
+                       diaryTimestamp: Int64.random(in: 0..<1_000_000),
+                       diaryDate: generateRandomString(domain: .alphanumeric, ofLength: 10),
+                       createdAtTimestamp: Int64.random(in: 0..<1_000_000),
+                       lastEditedAtTimestamp: Int64.random(in: 0..<1_000_000))
     }
 }

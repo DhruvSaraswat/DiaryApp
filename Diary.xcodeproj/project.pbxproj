@@ -29,6 +29,8 @@
 		7B41A15D2BB763E3000DF8D3 /* SchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B41A15C2BB763E3000DF8D3 /* SchemaV1.swift */; };
 		7B41A15F2BB76487000DF8D3 /* CachedDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B41A15E2BB76487000DF8D3 /* CachedDataProvider.swift */; };
 		7B41A1612BB764EF000DF8D3 /* CachedDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B41A1602BB764EF000DF8D3 /* CachedDataHandler.swift */; };
+		7B41A1642BBA8F87000DF8D3 /* CachedDataProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B41A1632BBA8F87000DF8D3 /* CachedDataProviderTests.swift */; };
+		7B41A1662BBA9035000DF8D3 /* ContainerForTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B41A1652BBA9035000DF8D3 /* ContainerForTest.swift */; };
 		7B91D63C2BA9BF67007367E5 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B91D63B2BA9BF67007367E5 /* CalendarViewModel.swift */; };
 		7BA4F3452B87D6670073A13B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7BA4F3442B87D6670073A13B /* FirebaseAuth */; };
 		7BA4F3482B87D6CE0073A13B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7BA4F3472B87D6CE0073A13B /* GoogleSignIn */; };
@@ -90,6 +92,8 @@
 		7B41A15C2BB763E3000DF8D3 /* SchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaV1.swift; sourceTree = "<group>"; };
 		7B41A15E2BB76487000DF8D3 /* CachedDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedDataProvider.swift; sourceTree = "<group>"; };
 		7B41A1602BB764EF000DF8D3 /* CachedDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedDataHandler.swift; sourceTree = "<group>"; };
+		7B41A1632BBA8F87000DF8D3 /* CachedDataProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedDataProviderTests.swift; sourceTree = "<group>"; };
+		7B41A1652BBA9035000DF8D3 /* ContainerForTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerForTest.swift; sourceTree = "<group>"; };
 		7B91D63B2BA9BF67007367E5 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		7BA4F34B2B87D8760073A13B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7BA4F34F2B87DDDF0073A13B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -191,7 +195,8 @@
 		7B36D2142B84C367002A5C48 /* DiaryTests */ = {
 			isa = PBXGroup;
 			children = (
-				7BCF336D2BAE0E6900631002 /* NetworkLayer */,
+				7B41A1622BBA8F61000DF8D3 /* PersistenceTests */,
+				7BCF336D2BAE0E6900631002 /* NetworkLayerTests */,
 				7BCF33702BAE0E9700631002 /* UnitTestsUtility.swift */,
 			);
 			path = DiaryTests;
@@ -291,6 +296,15 @@
 			path = V1;
 			sourceTree = "<group>";
 		};
+		7B41A1622BBA8F61000DF8D3 /* PersistenceTests */ = {
+			isa = PBXGroup;
+			children = (
+				7B41A1632BBA8F87000DF8D3 /* CachedDataProviderTests.swift */,
+				7B41A1652BBA9035000DF8D3 /* ContainerForTest.swift */,
+			);
+			path = PersistenceTests;
+			sourceTree = "<group>";
+		};
 		7B91D63A2BA9BF54007367E5 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,12 +321,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7BCF336D2BAE0E6900631002 /* NetworkLayer */ = {
+		7BCF336D2BAE0E6900631002 /* NetworkLayerTests */ = {
 			isa = PBXGroup;
 			children = (
 				7BCF336E2BAE0E8100631002 /* RequestTests.swift */,
 			);
-			path = NetworkLayer;
+			path = NetworkLayerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -492,6 +506,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B41A1642BBA8F87000DF8D3 /* CachedDataProviderTests.swift in Sources */,
+				7B41A1662BBA9035000DF8D3 /* ContainerForTest.swift in Sources */,
 				7BA4F3522B87DEA30073A13B /* AuthenticationViewModel.swift in Sources */,
 				7BCF33712BAE0E9700631002 /* UnitTestsUtility.swift in Sources */,
 				7BCF336F2BAE0E8100631002 /* RequestTests.swift in Sources */,

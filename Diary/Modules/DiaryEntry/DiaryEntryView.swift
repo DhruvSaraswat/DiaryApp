@@ -65,7 +65,7 @@ struct DiaryEntryView: View {
         let cache = CachedDataHandler(modelContainer: modelContext.container)
         Task {
             do {
-                try await cache.persist(diaryEntries: [viewModel.diaryEntryItem])
+                try await cache.persist(diaryEntry: viewModel.diaryEntryItem)
 
                 DispatchQueue.main.async {
                     /// If a new diary entry was created just now, the 'dot' should appear below that calendar date in `HomeView`

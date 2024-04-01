@@ -17,19 +17,21 @@ actor CachedDataHandler {
         self.modelContainer = modelContainer
     }
 
-    func persist(diaryEntries: [DiaryEntryItem]) throws {
-        diaryEntries.forEach { modelContext.insert($0) }
+    @discardableResult
+    func persist(diaryEntry: DiaryEntryItem) throws -> PersistentIdentifier {
+        modelContext.insert(diaryEntry)
+        try modelContext.save()
+        return diaryEntry.persistentModelID
+    }
+
+    func delete<T: PersistentModel>(id: PersistentIdentifier, ofType type: T.Type) throws {
+        guard let item = self[id, as: type] else { return }
+        modelContext.delete(item)
         try modelContext.save()
     }
 
-    func delete(diaryEntry: DiaryEntryItem) throws {
-        modelContext.delete(diaryEntry)
-        try modelContext.save()
-    }
-
-    // TODO: Try making this function generic
-    func deleteAllItems() throws {
-        try modelContext.delete(model: DiaryEntryItem.self)
+    func deleteAllItems<T: PersistentModel>(ofType type: T.Type) throws {
+        try modelContext.delete(model: type)
         try modelContext.save()
     }
 }

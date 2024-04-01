@@ -74,10 +74,10 @@ struct HomeView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         authViewModel.signOut()
-                        Task { @MainActor in
+                        Task {
                             if let dataHandler = await createDataHandler() {
                                 do {
-                                    try await dataHandler.deleteAllItems()
+                                    try await dataHandler.deleteAllItems(ofType: DiaryEntryItem.self)
                                 } catch {
                                     debugPrint("ERROR OCCURRED WHILE DELETING ALL DIARY ENTRIES - \(error)")
                                 }
@@ -98,11 +98,13 @@ struct HomeView: View {
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .task(priority: .high) { @MainActor in
+        .task(priority: .high) {
             let tuple = await homeViewModel.fetchAllDiaryEntries(userId: authViewModel.getUserId())
             do {
                 if let dataHandler = await createDataHandler() {
-                    try await dataHandler.persist(diaryEntries: tuple.items)
+                    for item in tuple.items {
+                        try await dataHandler.persist(diaryEntry: item)
+                    }
                     show2RecentEntries = true
                     /// show the dot below all the calendar dates for which a diary entry exists
                     DispatchQueue.main.async {
@@ -138,12 +140,12 @@ struct HomeView: View {
 
     @MainActor
     func deleteDiaryItems(at offsets: IndexSet) {
-        Task { @MainActor in
+        Task {
             if let dataHandler = await createDataHandler() {
                 for index in offsets {
                     guard let diaryEntryToBeDeleted = items[safe: index] else { continue }
                     do {
-                        try await dataHandler.delete(diaryEntry: diaryEntryToBeDeleted)
+                        try await dataHandler.delete(id: diaryEntryToBeDeleted.id, ofType: DiaryEntryItem.self)
                     } catch {
                         debugPrint("ERROR OCCURRED WHILE DELETING DIARY ENTRY - \(error)")
                     }
