@@ -10,3 +10,5 @@ The backend source code can be found [here](https://github.com/DhruvSaraswat/Dia
 ## MIscellaneous Notes
 - [`Firebase`](https://github.com/firebase/firebase-ios-sdk) is used for authentication
 - [`SwiftData`](https://developer.apple.com/xcode/swiftdata/) is used for persistence
+- [`FSCalendar`](https://github.com/WenchaoD/FSCalendar) is used for the calendar
+- Swift Package Manager is used to manage third party SDKs.
