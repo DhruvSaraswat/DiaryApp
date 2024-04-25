@@ -12,3 +12,9 @@ The backend source code can be found [here](https://github.com/DhruvSaraswat/Dia
 - [`SwiftData`](https://developer.apple.com/xcode/swiftdata/) is used for persistence
 - [`FSCalendar`](https://github.com/WenchaoD/FSCalendar) is used for the calendar
 - Swift Package Manager is used to manage third party SDKs.
+
+## Scope for Future Work
+- Add more unit tests
+- Add UI tests
+- Add a feature to add tags to diary entries
+- Add a feature to add images and videos to diary entries (to be developed in tandem with backend)
